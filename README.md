@@ -1,5 +1,10 @@
 # Unified Quantum Gravity-Particle Framework
 A Complete Theory of Fundamental Interactions
+This project started with the idea of a photonic universe background and then tried to solve the problems of black holes and multi universes step by step. 
+Along the way, other particles were added to the model as needed. The next added particles were protons, neutrinos, and axions. 
+After the structure of this background, several unexplained phenomena were investigated, such as the Philadelphia Experiment and Yildiz magnetic motor, and several other topics. 
+Then, the model of cosmic consciousness was developed (UQCMF).
+
 *0-Introduction.txt
 *1-Photons.txt
 *2-PhotonsToMass.txt
