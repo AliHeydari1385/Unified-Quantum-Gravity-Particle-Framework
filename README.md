@@ -49,5 +49,9 @@ Then, the model of cosmic consciousness was developed (UQCMF).
 *26-Peace Ray.pdf
 *Step by Step to understand Universe.pdf
 *UQGPF.pdf
-*UQGPF.py
-*UQGPF.py
+*1.Simulation1.py
+*2.Simulation2.py
+*3.lamda correction 1.py
+*4.lamda correction 2.py
+*5.lamda correction 3.py
+*6.lamda correction 4.py
