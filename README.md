@@ -1,10 +1,11 @@
 # Unified Quantum Gravity-Particle Framework
-A Complete Theory of Fundamental Interactions
+A Complete Theory of Fundamental 
 This project started with the idea of a photonic universe background and then tried to solve the problems of black holes and multi universes step by step. 
 Along the way, other particles were added to the model as needed. The next added particles were protons, neutrinos, and axions. 
 After the structure of this background, several unexplained phenomena were investigated, such as the Philadelphia Experiment and Yildiz magnetic motor, and several other topics. 
 Then, the model of cosmic consciousness was developed (UQCMF).
 
+*UQGPF Development Roadmap.pdf
 *0-Introduction.txt
 *1-Photons.txt
 *2-PhotonsToMass.txt
@@ -24,7 +25,7 @@ Then, the model of cosmic consciousness was developed (UQCMF).
 *16-Photosynthesis.txt
 *1-theory.pdf
 *2-Extended theory .pdf
-*3-utraLight.pdf
+*3-UltraLight.pdf
 *4-Time Travel.pdf
 *5-Protons.pdf
 *6-CyclicUniverse.pdf
@@ -55,3 +56,20 @@ Then, the model of cosmic consciousness was developed (UQCMF).
 *4.lamda correction 2.py
 *5.lamda correction 3.py
 *6.lamda correction 4.py
+*7.UQGPF Neutrino-Proton Cross Section Correction & Validation.pdf
+*8.MCMC_Real.py
+*9.MCMC_Compare.py
+*10.normalization factor.py
+*11.Complete Range.py
+*12.Cross-Section Correction and Full-Range Validation.py
+*13.Fit.py
+*14.rpp2023-rev-nu-cross-sections.pdf
+*15.UQGPF Neutrino-Proton Cross Section Correction & Validation.pdf
+*16.uqgpf_corrected_fullrange_plot.png
+*17.uqgpf_lambda_vs_E_regimes.png
+*18.uqgpf_model_corrected.csv
+*19.uqgpf_model_corrected_fullrange.csv
+*20.uqgpf_model_correction_plot.png
+*21.uqgpf_paper_revtex.tex
+*22.UQGPF_Paper_RevTeX_PRD.pdf
+*23.uqgpf_sigma_vs_E_regimes.png
