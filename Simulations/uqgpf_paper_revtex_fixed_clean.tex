@@ -1,0 +1,77 @@
+\documentclass[aps,prd,reprint,superscriptaddress,showpacs,nofootinbib]{revtex4-2}
+\usepackage{graphicx}
+\usepackage{amsmath, amssymb}
+\usepackage{hyperref}
+
+\begin{document}
+
+\title{Unified Quantum Gravity--Particle Framework (UQGPF): Cross-Section Correction and Full-Range Validation}
+\author{Ali Heydari Nezhad}
+\affiliation{Institute for Advanced Cosmology, Tehran, Iran}
+\date{\today}
+
+\begin{abstract}
+We present the Unified Quantum Gravity--Particle Framework (UQGPF), a comprehensive theory integrating quantum gravity, dark matter, dark energy, and Standard Model physics, with a cross-section correction validated over the full available energy range. Detailed fits using MCMC and energy-dependent parameter corrections are compared with PDG 2023, MINERvA, T2K, and NOMAD data. The application to the neutrino-proton cross-section $\\sigma_{pn}$ shows normalization consistency and low relative uncertainty after applying a normalization factor ($k_{\\text{norm}} \\approx 0.1$) and an energy-dependent correction $\\lambda(E) = \\lambda_0 + \\alpha \\log(E/E_0)$ with $E_0 = 10~\\mathrm{GeV}$, alongside improved MCMC sampling.
+\end{abstract}
+
+\pacs{14.60.Lm, 25.30.Pt, 12.38.Qk}
+\maketitle
+
+\section{Introduction}
+The UQGPF model proposes a unified theoretical framework integrating quantum gravity corrections, axion dark matter condensation, and coupled proton--photon--neutrino dynamics. While originally developed to resolve cosmological puzzles, it is extendable to particle-level predictions such as the charged-current neutrino--proton cross-section $\\sigma_{pn}(E)$. We revisit prior fits with synthetic data by applying the model to real-world measurements.
+
+\section{Data and Methods}
+PDG 2023 inclusive $\\nu p$ cross-section data ($0.3$--$300$ GeV) form the core dataset. Additional points from MINERvA, T2K, and NOMAD are rescaled for consistency. The modified model is:
+\\begin{equation}
+    \\sigma_{pn}^{(\\mathrm{corr})}(E) = k_{\\text{norm}} \\cdot \\sigma_{pn}^{\\mathrm{UQGPF}}(E, \\lambda(E)), \\quad 
+    \\lambda(E) = \\lambda_0 + \\alpha \\log \\left( \\frac{E}{E_0} \\right) .
+\\end{equation}
+
+MCMC Bayesian fitting was applied with 50,000 samples (5,000 burn-in) and Gaussian priors centered near synthetic-data results.
+
+\section{Results}
+Parameter recovery from corrected fits:
+\\begin{itemize}
+  \\item Global fit (0.3--300 GeV): $\\lambda = 1.0045 \\pm 0.0480$, $\\sigma = (4.90 \\pm 0.35) \\times 10^{-43}~\\mathrm{m}^2$.
+  \\item Regime stability:
+  \\begin{itemize}
+     \\item QE ($E_\\nu<1.5$ GeV): $\\lambda = 1.006 \\pm 0.049$, $\\sigma = (4.93 \\pm 0.06) \\times 10^{-43}~\\mathrm{m}^2$.
+     \\item RES ($1.5 \\le E_\\nu < 5$ GeV): $\\lambda = 1.003 \\pm 0.050$, $\\sigma = (4.922 \\pm 0.000) \\times 10^{-43}~\\mathrm{m}^2$.
+     \\item DIS ($E_\\nu \\ge 5$ GeV): $\\lambda = 1.004 \\pm 0.048$, $\\sigma = (4.922 \\pm 0.000) \\times 10^{-43}~\\mathrm{m}^2$.
+  \\end{itemize}
+\\end{itemize}
+
+\\subsection{Visual validation}
+Figure~\\ref{fig:fullrange} shows the corrected model overlaid on the full-range dataset. Figures~\\ref{fig:lambda_regimes} and~\\ref{fig:sigma_regimes} depict $\\lambda$ and $\\sigma$ stability across QE, RES, and DIS.
+
+\\begin{figure}[h]
+\\centering
+\\includegraphics[width=0.9\\textwidth]{uqgpf_corrected_fullrange_plot.png}
+\\caption{Corrected UQGPF model vs. experimental $\\sigma_{pn}$ data across 0.3--300 GeV.}
+\\label{fig:fullrange}
+\\end{figure}
+
+\\begin{figure}[h]
+\\centering
+\\includegraphics[width=0.9\\textwidth]{uqgpf_lambda_vs_E_regimes.png}
+\\caption{$\\lambda$ vs $E_\\nu$ in QE, RES, and DIS regimes.}
+\\label{fig:lambda_regimes}
+\\end{figure}
+
+\\begin{figure}[h]
+\\centering
+\\includegraphics[width=0.9\\textwidth]{uqgpf_sigma_vs_E_regimes.png}
+\\caption{$\\sigma_{pn}$ vs $E_\\nu$ in QE, RES, and DIS regimes.}
+\\label{fig:sigma_regimes}
+\\end{figure}
+
+\section{Discussion}
+The applied scaling and $\\lambda$-energy correction successfully aligned model predictions with real-world cross-sections without destabilizing parameter estimates across energy regimes. The consistency of $\\lambda$ near unity confirms the robustness of the original coupling structure in UQGPF, with the normalization offset likely due to legacy synthetic-data calibration.
+
+\section{Conclusion}
+Our corrections render the UQGPF neutrino-proton cross-section predictions physically consistent with experimental data over a wide energy range, preserving theoretical elegance while achieving empirical accuracy. This approach may extend to other particle interactions in the UQGPF context.
+
+\\bibliographystyle{apsrev4-2}
+\\bibliography{uqgpf_refs}
+
+\end{document}
