@@ -1,0 +1,139 @@
+# نسخه ۸: کد MCMC برای فیت UQGPF با داده‌های ACT+SPT و Pantheon+SH0ES
+# اجرا در Google Colab: نیاز به آپلود فایل‌های داده
+!pip install emcee corner numpy matplotlib scipy
+!pip install emcee corner
+!pip install corner
+from google.colab import files
+print("actlite_3yr_v2p2.zip")
+uploaded = files.upload()
+from google.colab import files
+print("ES_AND_COVARPantheon%2BSH0ES.dat.txt")
+uploaded = files.upload()
+# نسخه ۸٫۱: کد MCMC بهبودیافته برای فیت UQGPF با داده‌های ACT+SPT و Pantheon+SH0ES
+# شامل unzip خودکار و رفع هشدارهای نحوی
+
+import numpy as np
+import emcee
+import corner
+import matplotlib.pyplot as plt
+from scipy.linalg import cholesky, solve_triangular
+import pandas as pd
+import zipfile
+import os
+
+# unzip فایل ACT+SPT اگر لازم باشد
+zip_path = 'actlite_3yr_v2p2.zip'
+extract_dir = 'actlite_3yr_v2p2'
+if not os.path.exists(extract_dir):
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(extract_dir)
+    print(f"فایل {zip_path} با موفقیت استخراج شد به {extract_dir}")
+
+# بارگذاری داده‌های ACT+SPT
+def load_act_spt_data():
+    cl_path = os.path.join(extract_dir, 'actlite_3yr_v2p2/data/ACT+SPT_cl.dat')
+    cov_path = os.path.join(extract_dir, 'actlite_3yr_v2p2/data/ACT+SPT_cov.dat')
+    
+    if not os.path.exists(cl_path) or not os.path.exists(cov_path):
+        raise FileNotFoundError("فایل‌های داده ACT+SPT پیدا نشدند. مطمئن شوید zip استخراج شده است.")
+    
+    cl_data = np.loadtxt(cl_path, skiprows=0)
+    ell = cl_data[:, 0]
+    cl_tt = cl_data[:, 1]
+    cl_err = cl_data[:, 2]  # برای پلات استفاده می‌شود
+    
+    # بارگذاری کوواریانس (۱۶۰۲ خط، اما به صورت flat)
+    cov_flat = np.loadtxt(cov_path, skiprows=0).flatten()
+    n = 89  # تعداد binها
+    cov = np.zeros((n, n))
+    idx = 0
+    for i in range(n):
+        for j in range(n):  # حالا کامل (symmetric)
+            cov[i, j] = cov_flat[idx]
+            idx += 1
+    cov = (cov + cov.T) / 2  # اطمینان از symmetric بودن
+    # بررسی positive-definite و تصحیح کوچک اگر لازم
+    try:
+        chol_cov = cholesky(cov, lower=True)
+    except np.linalg.LinAlgError:
+        cov += np.eye(n) * np.abs(np.min(np.diag(cov))) * 1e-6  # تصحیح بهبودیافته
+        chol_cov = cholesky(cov, lower=True)
+    inv_cov = solve_triangular(chol_cov, np.eye(n), lower=True).T @ solve_triangular(chol_cov, np.eye(n), lower=True)
+    return ell, cl_tt, inv_cov, cl_err
+
+# بارگذاری داده‌های SNIa (Pantheon+SH0ES)
+def load_snia_data():
+    snia_path = 'ES_AND_COVARPantheon%2BSH0ES.dat.txt'
+    if not os.path.exists(snia_path):
+        raise FileNotFoundError(f"فایل {snia_path} پیدا نشد. لطفاً آن را آپلود کنید.")
+    snia_df = pd.read_csv(snia_path, delim_whitespace=True, on_bad_lines='skip')
+    z = snia_df['zHD'].values
+    mu = snia_df['MU_SH0ES'].values
+    mu_err = snia_df['MU_SH0ES_ERR_DIAG'].values
+    return z, mu, mu_err
+
+# مدل UQGPF ساده‌شده برای Cl (با پارامترهای \Omega_m, h, \beta, \gamma, \alpha)
+def model_uqgpf(ell, theta):
+    Omega_m, h, beta, gamma, alpha = theta
+    cl_model = (Omega_m * ell**beta + h * ell**gamma) * alpha  # مدل نمونه (برای دقت بیشتر با CAMB ادغام شود)
+    return cl_model
+
+# تابع log-likelihood برای CMB
+def log_likelihood_cmb(theta, ell, data, inv_cov):
+    model = model_uqgpf(ell, theta)
+    residual = data - model
+    chi2 = residual @ inv_cov @ residual
+    return -0.5 * chi2
+
+# تابع log-likelihood برای SNIa (مدل ساده)
+def log_likelihood_snia(theta, z, mu_data, mu_err):
+    Omega_m, h, *_ = theta
+    mu_model = 5 * np.log10(z * (1 + z/2)) + 25 + 5 * np.log10(1 / h)  # مدل نمونه
+    chi2 = np.sum(((mu_data - mu_model) / mu_err)**2)
+    return -0.5 * chi2
+
+# تابع log-posterior کامل
+def log_posterior(theta, ell, cl_data, inv_cov, z, mu_data, mu_err):
+    if not all(0 < t < 2 for t in theta):  # priors ساده برای جلوگیری از مقادیر نامعتبر
+        return -np.inf
+    priors = np.sum((theta - [0.3, 0.7, 1.0, 0.5, 1.0])**2 / [0.1, 0.1, 0.5, 0.5, 0.5]**2)
+    return log_likelihood_cmb(theta, ell, cl_data, inv_cov) + log_likelihood_snia(theta, z, mu_data, mu_err) - 0.5 * priors
+
+# اجرای MCMC
+ell, cl_tt, inv_cov, cl_err = load_act_spt_data()
+z, mu, mu_err = load_snia_data()
+
+ndim = 5  # پارامترها: Omega_m, h, beta, gamma, alpha
+nwalkers = 32
+nsteps = 25000
+p0 = np.random.rand(nwalkers, ndim) * 0.1 + [0.3, 0.7, 1.0, 0.5, 1.0]
+
+sampler = emcee.EnsembleSampler(nwalkers, ndim, log_posterior, args=(ell, cl_tt, inv_cov, z, mu, mu_err))
+sampler.run_mcmc(p0, nsteps, progress=True)
+
+# تحلیل posterior
+samples = sampler.get_chain(discard=5000, thin=10, flat=True)
+fig = corner.corner(samples, labels=[r"$\Omega_m$", r"$h$", r"$\beta$", r"$\gamma$", r"$\alpha$"])
+fig.savefig('uqgpf_posteriors_v8_1.pdf')
+
+# محاسبه chi2 نهایی و residuals
+theta_med = np.median(samples, axis=0)
+cl_model = model_uqgpf(ell, theta_med)
+residuals = (cl_tt - cl_model) / cl_err  # normalized residuals
+print(f"Mean residuals: {np.mean(residuals)}, Std: {np.std(residuals)}")
+np.savetxt('residuals_v8_1.csv', residuals, delimiter=',')
+
+# تولید جدول LaTeX
+params_df = pd.DataFrame({'Parameter': [r"$\Omega_m$", r"$h$", r"$\beta$", r"$\gamma$", r"$\alpha$"],
+                          'Mean': np.mean(samples, axis=0),
+                          'Std': np.std(samples, axis=0)})
+params_df.to_latex('latex_table_v8_1.tex', index=False)
+
+# پلات فیت
+plt.errorbar(ell, cl_tt, yerr=cl_err, label='Data', fmt='o', ms=3)
+plt.plot(ell, cl_model, label='UQGPF Fit', linewidth=2)
+plt.xlabel('ell')
+plt.ylabel('Cl TT')
+plt.legend()
+plt.savefig('uqgpf_fit_v8_1.pdf')
+plt.show()
