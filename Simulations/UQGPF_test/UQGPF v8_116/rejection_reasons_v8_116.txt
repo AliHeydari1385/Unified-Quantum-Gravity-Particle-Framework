@@ -1,0 +1,528 @@
+Error for om=0.05, h=0.40, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.05, h=0.40, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.05, h=0.40, gamma=2.64: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.05, h=0.40, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.40, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.40, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.40, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.40, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.50, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.05, h=0.50, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.05, h=0.50, gamma=2.64: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.05, h=0.50, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.50, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.50, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.50, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.50, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.60, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.05, h=0.60, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.05, h=0.60, gamma=2.64: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.05, h=0.60, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.60, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.60, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.60, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.60, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.70, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.05, h=0.70, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.05, h=0.70, gamma=2.64: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.05, h=0.70, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.70, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.70, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.70, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.70, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.80, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.05, h=0.80, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.05, h=0.80, gamma=2.64: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.05, h=0.80, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.80, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.80, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.80, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.80, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.90, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.05, h=0.90, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.05, h=0.90, gamma=2.64: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.05, h=0.90, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.90, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.90, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.90, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=0.90, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=1.00, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.05, h=1.00, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.05, h=1.00, gamma=2.64: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.05, h=1.00, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=1.00, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=1.00, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=1.00, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=1.00, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=1.10, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.05, h=1.10, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.05, h=1.10, gamma=2.64: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.05, h=1.10, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=1.10, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=1.10, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=1.10, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.05, h=1.10, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.40, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.12, h=0.40, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.12, h=0.40, gamma=2.64: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.12, h=0.40, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.40, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.40, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.40, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.40, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.50, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.12, h=0.50, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.12, h=0.50, gamma=2.64: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.12, h=0.50, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.50, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.50, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.50, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.50, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.60, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.12, h=0.60, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.12, h=0.60, gamma=2.64: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.12, h=0.60, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.60, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.60, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.60, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.60, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.70, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.12, h=0.70, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.12, h=0.70, gamma=2.64: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.12, h=0.70, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.70, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.70, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.70, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.70, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.80, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.12, h=0.80, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.12, h=0.80, gamma=2.64: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.12, h=0.80, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.80, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.80, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.80, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.80, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.90, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.12, h=0.90, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.12, h=0.90, gamma=2.64: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.12, h=0.90, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.90, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.90, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.90, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=0.90, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=1.00, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.12, h=1.00, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.12, h=1.00, gamma=2.64: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.12, h=1.00, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=1.00, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=1.00, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=1.00, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=1.00, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=1.10, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.12, h=1.10, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.12, h=1.10, gamma=2.64: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.12, h=1.10, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=1.10, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=1.10, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=1.10, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.12, h=1.10, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.40, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=0.40, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=0.40, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=0.40, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.40, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.40, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.40, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.40, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.50, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=0.50, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=0.50, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=0.50, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.50, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.50, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.50, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.50, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.60, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=0.60, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=0.60, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=0.60, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.60, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.60, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.60, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.60, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.70, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=0.70, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=0.70, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=0.70, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.70, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.70, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.70, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.70, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.80, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=0.80, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=0.80, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=0.80, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.80, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.80, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.80, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.80, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.90, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=0.90, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=0.90, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=0.90, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.90, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.90, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.90, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=0.90, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=1.00, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=1.00, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=1.00, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=1.00, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=1.00, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=1.00, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=1.00, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=1.00, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=1.10, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=1.10, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=1.10, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.19, h=1.10, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=1.10, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=1.10, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=1.10, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.19, h=1.10, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.40, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=0.40, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=0.40, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=0.40, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.40, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.40, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.40, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.40, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.50, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=0.50, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=0.50, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=0.50, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.50, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.50, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.50, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.50, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.60, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=0.60, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=0.60, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=0.60, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.60, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.60, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.60, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.60, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.70, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=0.70, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=0.70, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=0.70, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.70, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.70, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.70, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.70, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.80, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=0.80, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=0.80, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=0.80, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.80, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.80, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.80, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.80, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.90, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=0.90, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=0.90, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=0.90, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.90, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.90, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.90, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=0.90, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=1.00, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=1.00, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=1.00, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=1.00, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=1.00, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=1.00, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=1.00, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=1.00, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=1.10, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=1.10, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=1.10, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.26, h=1.10, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=1.10, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=1.10, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=1.10, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.26, h=1.10, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.40, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=0.40, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=0.40, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=0.40, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.40, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.40, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.40, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.40, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.50, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=0.50, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=0.50, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=0.50, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.50, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.50, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.50, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.50, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.60, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=0.60, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=0.60, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=0.60, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.60, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.60, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.60, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.60, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.70, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=0.70, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=0.70, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=0.70, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.70, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.70, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.70, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.70, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.80, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=0.80, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=0.80, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=0.80, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.80, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.80, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.80, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.80, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.90, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=0.90, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=0.90, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=0.90, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.90, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.90, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.90, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=0.90, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=1.00, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=1.00, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=1.00, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=1.00, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=1.00, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=1.00, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=1.00, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=1.00, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=1.10, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=1.10, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=1.10, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.34, h=1.10, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=1.10, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=1.10, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=1.10, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.34, h=1.10, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.40, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=0.40, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=0.40, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=0.40, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.40, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.40, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.40, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.40, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.50, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=0.50, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=0.50, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=0.50, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.50, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.50, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.50, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.50, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.60, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=0.60, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=0.60, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=0.60, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.60, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.60, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.60, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.60, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.70, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=0.70, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=0.70, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=0.70, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.70, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.70, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.70, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.70, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.80, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=0.80, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=0.80, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=0.80, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.80, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.80, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.80, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.80, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.90, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=0.90, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=0.90, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=0.90, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.90, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.90, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.90, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=0.90, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=1.00, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=1.00, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=1.00, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=1.00, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=1.00, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=1.00, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=1.00, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=1.00, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=1.10, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=1.10, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=1.10, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.41, h=1.10, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=1.10, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=1.10, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=1.10, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.41, h=1.10, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.40, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=0.40, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=0.40, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=0.40, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.40, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.40, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.40, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.40, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.50, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=0.50, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=0.50, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=0.50, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.50, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.50, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.50, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.50, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.60, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=0.60, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=0.60, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=0.60, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.60, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.60, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.60, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.60, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.70, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=0.70, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=0.70, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=0.70, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.70, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.70, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.70, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.70, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.80, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=0.80, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=0.80, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=0.80, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.80, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.80, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.80, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.80, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.90, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=0.90, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=0.90, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=0.90, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.90, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.90, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.90, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=0.90, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=1.00, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=1.00, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=1.00, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=1.00, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=1.00, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=1.00, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=1.00, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=1.00, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=1.10, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=1.10, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=1.10, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.48, h=1.10, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=1.10, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=1.10, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=1.10, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.48, h=1.10, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.40, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=0.40, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=0.40, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=0.40, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.40, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.40, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.40, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.40, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.50, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=0.50, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=0.50, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=0.50, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.50, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.50, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.50, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.50, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.60, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=0.60, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=0.60, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=0.60, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.60, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.60, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.60, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.60, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.70, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=0.70, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=0.70, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=0.70, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.70, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.70, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.70, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.70, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.80, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=0.80, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=0.80, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=0.80, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.80, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.80, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.80, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.80, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.90, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=0.90, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=0.90, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=0.90, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.90, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.90, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.90, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=0.90, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=1.00, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=1.00, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=1.00, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=1.00, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=1.00, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=1.00, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=1.00, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=1.00, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=1.10, gamma=1.50: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=1.10, gamma=2.07: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=1.10, gamma=2.64: could not broadcast input array from shape (2551,) into shape (2501,)
+Error for om=0.55, h=1.10, gamma=3.21: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=1.10, gamma=3.79: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=1.10, gamma=4.36: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=1.10, gamma=4.93: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.55, h=1.10, gamma=5.50: dark energy model has w + wa > 0, giving w>0 at high redshift

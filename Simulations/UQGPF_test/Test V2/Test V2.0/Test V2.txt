@@ -1,0 +1,250 @@
+# UQGPF v2.0 MCMC Fitting Code (Version 8.6 - Fixed SNIa Loading)
+# This code is designed for a new Jupyter/Colab notebook.
+# It prompts the user to upload both ZIP files at once to avoid sequential upload issues.
+# Then, it extracts them, searches for the necessary data files (to handle varying structures),
+# loads the data with enhanced parsing for irregular formats using regex for covariance,
+# and improved SNIa loading with header=0 to correctly parse column names.
+# If header parsing fails, falls back to index-based with type conversion.
+# Requirements: Run in Google Colab or a Jupyter environment with file upload capability.
+
+# Step 1: Install required packages
+!pip install emcee
+!pip install corner
+
+import numpy as np
+import scipy.integrate as integrate
+import emcee
+import corner
+import matplotlib.pyplot as plt
+import zipfile
+import os
+import pandas as pd
+import re  # For regex parsing
+from google.colab import files  # For file upload in Colab (comment out if not in Colab)
+
+# Step 2: Upload both ZIP files at once
+# In Colab, this will prompt file selection. Select both actlite_3yr_v2p2.zip and Reference.zip.
+print("Please upload both actlite_3yr_v2p2.zip and Reference.zip")
+uploaded = files.upload()
+
+# Check if both files are uploaded
+required_files = ['actlite_3yr_v2p2.zip', 'Reference.zip']
+uploaded_files = list(uploaded.keys())
+missing = [f for f in required_files if f not in uploaded_files]
+if missing:
+    raise ValueError(f"Missing files: {missing}. Please rerun and upload both.")
+
+# Save uploaded files to disk (Colab uploads to memory, so we write them to files)
+act_zip_path = 'actlite_3yr_v2p2.zip'
+with open(act_zip_path, 'wb') as f:
+    f.write(uploaded['actlite_3yr_v2p2.zip'])
+
+ref_zip_path = 'Reference.zip'
+with open(ref_zip_path, 'wb') as f:
+    f.write(uploaded['Reference.zip'])
+
+print("Uploaded files saved successfully.")
+
+# Step 3: Extract the ZIP files
+# Extract actlite_3yr_v2p2.zip
+with zipfile.ZipFile(act_zip_path, 'r') as zip_ref:
+    zip_ref.extractall('act_data')
+print("Extracted actlite_3yr_v2p2.zip to 'act_data'")
+
+# Extract Reference.zip
+with zipfile.ZipFile(ref_zip_path, 'r') as zip_ref:
+    zip_ref.extractall('ref_data')
+print("Extracted Reference.zip to 'ref_data'")
+
+# Step 4: Search for and load CMB data from extracted files
+# Search for ACT+SPT_cl.dat and ACT+SPT_cov.dat in act_data directory
+def find_file(root_dir, filename):
+    for subdir, _, files in os.walk(root_dir):
+        if filename in files:
+            return os.path.join(subdir, filename)
+    raise FileNotFoundError(f"{filename} not found in {root_dir}")
+
+cl_dat_path = find_file('act_data', 'ACT+SPT_cl.dat')
+cov_dat_path = find_file('act_data', 'ACT+SPT_cov.dat')
+
+# Load Cl data (ell, Cl, err) - custom loading for clean numbers
+with open(cl_dat_path, 'r') as f:
+    lines = f.readlines()
+cmb_data = np.array([list(map(float, line.strip().split())) for line in lines if line.strip()])
+ell_cmb = cmb_data[:, 0]
+Cl_obs = cmb_data[:, 1]
+Cl_err = cmb_data[:, 2]
+print(f"Loaded {len(ell_cmb)} CMB Cl points.")
+
+# Load covariance matrix with enhanced regex parsing to extract ALL floats
+with open(cov_dat_path, 'r') as f:
+    text = f.read()
+
+# Regex pattern for scientific notation floats
+float_pattern = r'[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?'
+matches = re.findall(float_pattern, text)
+flat_cov = np.array([float(m) for m in matches])
+
+# Check length
+expected_len = len(ell_cmb) ** 2  # Assuming square cov for number of bins
+if len(flat_cov) != expected_len:
+    raise ValueError(f"Covariance data length {len(flat_cov)} != {expected_len}. Check file parsing or bin count.")
+print(f"Loaded covariance matrix with {len(flat_cov)} elements (reshaping to {len(ell_cmb)}x{len(ell_cmb)})")
+
+# Reshape to matrix
+cov_mat = flat_cov.reshape(len(ell_cmb), len(ell_cmb))
+
+# Compute inverse covariance (with check for positive definite)
+try:
+    cov_inv = np.linalg.inv(cov_mat)
+except np.linalg.LinAlgError:
+    print("Covariance matrix not invertible. Using pseudo-inverse.")
+    cov_inv = np.linalg.pinv(cov_mat)
+
+# Step 5: Search for and load SNIa data
+snia_filename = 'ES_AND_COVARPantheon%2BSH0ES.dat.txt'
+snia_path = find_file('ref_data', snia_filename)
+
+# Read using pandas with header=0 to parse column names correctly
+try:
+    snia_df = pd.read_csv(snia_path, sep='\s+', on_bad_lines='skip', header=0, engine='python')
+    z_snia = snia_df['zHD'].values
+    mu_obs = snia_df['MU_SH0ES'].values
+    mu_err = snia_df['MU_SH0ES_ERR_DIAG'].values  # Diagonal errors
+except (KeyError, pd.errors.ParserError):
+    print("Header parsing failed. Switching to index-based selection with type conversion.")
+    snia_df = pd.read_csv(snia_path, sep='\s+', on_bad_lines='skip', header=None, engine='python')
+    # Based on file structure: column 0=CID (str), 1=IDSURVEY (int), 2=zHD (float), ..., 10=MU_SH0ES (float), 11=MU_SH0ES_ERR_DIAG (float)
+    z_snia = pd.to_numeric(snia_df.iloc[1:, 2], errors='coerce').values  # Skip header row if present
+    mu_obs = pd.to_numeric(snia_df.iloc[1:, 10], errors='coerce').values
+    mu_err = pd.to_numeric(snia_df.iloc[1:, 11], errors='coerce').values
+
+# Filter valid rows (non-nan, positive err, etc.)
+valid = ~np.isnan(z_snia) & ~np.isnan(mu_obs) & ~np.isnan(mu_err) & (mu_err > 0)
+z_snia = z_snia[valid]
+mu_obs = mu_obs[valid]
+mu_err = mu_err[valid]
+
+print(f"Loaded {len(z_snia)} valid SNIa points.")
+
+# Constants (same as before)
+G = 6.67430e-11  # m^3 kg^-1 s^-2
+hbar = 1.0545718e-34  # J s
+c = 299792.458  # km/s
+l_p = np.sqrt(hbar * G / c**3)  # Planck length ~1.6e-35 m
+pi = np.pi
+
+# UQGPF v2.0 Parameters (6 params)
+# theta = [Omega_m, h, gamma, f_a, m_a, lambda_s]
+# Priors (uniform)
+priors = {
+    'Omega_m': (0.20, 0.30),  # Uniform [0.25 ± 0.05]
+    'h': (0.67, 0.73),        # Uniform [0.70 ± 0.03]
+    'gamma': (0.23, 0.25),    # Uniform [0.24 ± 0.01]
+    'f_a': (1e11, 1e13),      # Uniform [1e12 ± 1e11] GeV
+    'm_a': (1e-5, 1e-3),      # Uniform [1e-4 ± 1e-5] eV
+    'lambda_s': (0.3, 0.7)    # Uniform [0.5 ± 0.2]
+}
+fixed = {'beta': 0.3, 'alpha': 1.5, 'theta_s': 0.01, 'ell_string': 1e4, 'Omega_Lambda': 0.7}  # Fixed values
+
+# CMB Power Spectrum Model (C_l) from UQGPF v2.0
+def model_Cl(ell, theta):
+    Omega_m, h, gamma, f_a, m_a, lambda_s = theta
+    alpha = fixed['alpha']
+    beta = fixed['beta']
+    theta_s = fixed['theta_s']
+    ell_string = fixed['ell_string']
+    
+    term1 = alpha * (ell * (ell + 1)) / (2 * pi) * Omega_m**beta * np.exp(-gamma * ell / 2500)
+    term2 = (1.0 / f_a) * m_a * np.sin(ell * theta_s)**2  # g_ap assumed ~1 for simplicity
+    term3 = lambda_s * (l_p**2 / ell**2) * np.cos(ell / ell_string)
+    return term1 + term2 + term3
+
+# SNIa Luminosity Distance Model
+def model_mu(z, theta):
+    Omega_m, h, gamma, _, _, _ = theta  # f_a, m_a, lambda_s not used in SNIa for simplicity
+    H0 = h * 100  # km/s/Mpc
+    Omega_L = fixed['Omega_Lambda']
+    
+    def integrand(zp):
+        denom = np.sqrt(Omega_m * (1 + zp)**3 + Omega_L + gamma * (l_p**2) * (1 + zp)**(-2))
+        return c / (H0 * denom)
+    
+    dL = np.array([ (1 + zi) * integrate.quad(integrand, 0, zi)[0] for zi in z ])
+    mu = 5 * np.log10(dL) + 25  # Distance modulus
+    return mu
+
+# Log-Likelihood Function (Combined CMB + SNIa)
+def log_likelihood(theta):
+    # CMB part: chi2 with full cov
+    Cl_model = model_Cl(ell_cmb, theta)
+    diff = Cl_obs - Cl_model
+    chi2_cmb = np.dot(diff, np.dot(cov_inv, diff))
+    
+    # SNIa part (diagonal for now)
+    mu_model = model_mu(z_snia, theta)
+    diff_snia = mu_obs - mu_model
+    chi2_snia = np.sum((diff_snia / mu_err)**2)
+    
+    return -0.5 * (chi2_cmb + chi2_snia)  # Total log-like
+
+# Log-Prior Function
+def log_prior(theta):
+    for i, key in enumerate(priors.keys()):
+        low, high = priors[key]
+        if not (low < theta[i] < high):
+            return -np.inf
+    return 0.0
+
+# Log-Posterior
+def log_posterior(theta):
+    lp = log_prior(theta)
+    if not np.isfinite(lp):
+        return -np.inf
+    return lp + log_likelihood(theta)
+
+# MCMC Setup
+nwalkers = 32
+ndim = 6  # 6 parameters
+nsteps = 10000  # As in previous versions
+
+# Initial positions (around mean priors)
+initial = np.array([0.25, 0.70, 0.24, 1e12, 1e-4, 0.5]) + 1e-4 * np.random.randn(nwalkers, ndim)
+
+# Run emcee
+sampler = emcee.EnsembleSampler(nwalkers, ndim, log_posterior)
+sampler.run_mcmc(initial, nsteps, progress=True)
+
+# Discard burn-in and flatten
+samples = sampler.get_chain(discard=1000, thin=10, flat=True)
+
+# Output: Corner plot
+labels = list(priors.keys())
+fig = corner.corner(samples, labels=labels, truths=[0.25, 0.70, 0.24, 1e12, 1e-4, 0.5])
+fig.savefig('uqgpf_posteriors_v9.pdf')
+
+# Best-fit parameters (mean)
+best_theta = np.mean(samples, axis=0)
+print("Best-fit parameters:", best_theta)
+
+# Compute residuals for CMB
+Cl_best = model_Cl(ell_cmb, best_theta)
+residuals = (Cl_obs - Cl_best) / Cl_err
+np.savetxt('residuals_v9.csv', residuals, delimiter=',')
+
+# Plot fit to CMB data
+plt.errorbar(ell_cmb, Cl_obs, yerr=Cl_err, fmt='o', label='Data')
+plt.plot(ell_cmb, Cl_best, label='UQGPF v2.0 Fit')
+plt.xlabel('ell')
+plt.ylabel('C_l')
+plt.legend()
+plt.savefig('uqgpf_fit_v9.pdf')
+
+# LaTeX Table Output
+with open('latex_table_v9.tex', 'w') as f:
+    f.write('\\begin{table}\n\\centering\n\\begin{tabular}{cc}\nParameter & Value \\\\ \n\\hline\n')
+    for label, val in zip(labels, best_theta):
+        f.write(f'{label} & {val:.4e} \\\\ \n')
+    f.write('\\end{tabular}\n\\end{table}\n')
+
+print("MCMC completed. Outputs generated: uqgpf_posteriors_v9.pdf, residuals_v9.csv, uqgpf_fit_v9.pdf, latex_table_v9.tex")

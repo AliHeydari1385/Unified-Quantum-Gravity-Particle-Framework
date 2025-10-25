@@ -1,0 +1,117 @@
+UQCMF v1.10 - FIXED APPARENT MAGNITUDE FITTING
+============================================================
+
+1. Loading SNIa data...
+✓ Loaded 1701 SNIa data points
+  z range: 0.0012 - 2.2613
+  m_b range: 9.75 - 26.93
+  σ range: 0.112 - 1.517 mag
+
+2. Covariance Matrix...
+  ✓ Using diagonal covariance (trace = 115.3)
+
+3. BAO Data...
+  ✓ Loaded 5 BAO measurements
+
+4. TESTING DISTANCE CALCULATION...
+  Computing distances for standard cosmology...
+  Test z: [0.01 0.1  0.5  1.  ]
+  χ(z) [Mpc]: [42.7, 418.4, 1888.3, 3303.0]
+  D_L(z) [Mpc]: [43.2, 460.3, 2832.5, 6606.1]
+  μ(z) [mag]: [33.18, 38.31, 42.26, 44.10]
+  Expected D_L [Mpc]: [42.9, 440.3, 2893.2, 5555.5]
+  Expected μ [mag]: [33.16, 40.22, 45.31, 47.22]
+  Status: ⚠️ SCALE CHECK
+
+5. TESTING χ² CALCULATION...
+  Standard ΛCDM χ²: 1663.9
+  Expected χ²: ~1500-2500 for 1701 points
+  Status: ✓ REASONABLE
+  Sample residuals (first 5): [0.45343272 0.51058272 0.56637366 0.58797366 0.280897  ]
+  Sample m_obs: [ 9.74571  9.80286 11.4703  11.4919  11.5227 ]
+  Sample m_th: [ 9.29227728  9.29227728 10.90392634 10.90392634 11.241803  ]
+  Mean residual: -0.178
+  Typical difference: 0.66 mag
+
+6. OPTIMIZATION...
+  Try 1: Ω_m=0.30, h=0.70, λ=0.0e+00, M=-19.3
+    Final χ² = 1544.1
+    ✓ New best fit! Reduced χ² = 0.907
+  Try 2: Ω_m=0.27, h=0.67, λ=0.0e+00, M=-19.2
+    Final χ² = 1544.1
+  Try 3: Ω_m=0.31, h=0.74, λ=0.0e+00, M=-19.4
+    Final χ² = 1544.1
+    ✓ New best fit! Reduced χ² = 0.907
+  Try 4: Ω_m=0.28, h=0.68, λ=1.0e-10, M=-19.3
+    Final χ² = 1544.1
+  Try 5: Ω_m=0.25, h=0.72, λ=-5.0e-11, M=-19.3
+    Final χ² = 1544.7
+
+✓ BEST FIT FOUND:
+  Ω_m = 0.240
+  h = 0.739 (H₀ = 73.9 km/s/Mpc)
+  λ_UQCMF = 1.00e-09
+  M = -19.253
+  χ² = 1544.1
+  Reduced χ² = 0.907
+  ✓ PHYSICALLY REASONABLE FIT!
+
+7. MCMC ANALYSIS...
+  Running MCMC...
+  Initial positions: 0/8 valid
+  Poor initial positions - skipping MCMC
+
+8. FINAL PREDICTIONS...
+  ✓ Saved 1701 residuals
+9. PLOTTING ANALYSIS...
+  ✓ Saved comprehensive plots
+
+================================================================================
+UQCMF v1.10 - COMPLETE ANALYSIS RESULTS
+================================================================================
+DATASET: 1701 SNIa points + 5 BAO measurements
+COVARIANCE: Diagonal approximation (σ = 0.241 mag)
+
+BEST-FIT PARAMETERS:
+  Ωₘ = 0.2397
+  h = 0.7393
+  H₀ = 73.93 km/s/Mpc
+  λ_UQCMF = 1.000e-09
+  M = -19.2535
+
+UQCMF DISPERSION EFFECT:
+  Δμ(z=0) = -5.000e-13 mag
+  Δμ(z=1) = -6.156e-13 mag
+  Range: -7.13e-13 to -5.00e-13 mag
+
+FIT STATISTICS:
+  χ²_SNIa = 889.1
+  χ²_BAO = 655.06
+  χ²_total = 1544.1
+  Degrees of freedom = 1702
+  Reduced χ² = 0.9072 (Excellent)
+  P-value = 0.9973 (Good fit)
+
+RESIDUAL DIAGNOSTICS:
+  Mean bias = +0.0104 ± 0.0047 mag
+  RMS residual = 0.1946 mag
+  σ_residuals = 0.1943 mag
+  Max |Δm| = 1.182 mag
+  Fraction |Δm| > 3σ = 0.1%
+
+UQCMF vs ΛCDM COMPARISON:
+  χ²_ΛCDM = 889.1
+  Δχ² (UQCMF - ΛCDM) = -0.0
+  UQCMF improvement: Better
+
+MCMC STATUS: SKIPPED (χ² too high)
+
+OUTPUT FILES:
+  ✓ uqcmf_complete_analysis_v1_10.pdf  (9-panel analysis)
+  ✓ uqcmf_complete_analysis_v1_10.png  (High-res PNG)
+  ✓ residuals_uqcmf_v1_10.csv          (1701 points with predictions)
+    (No MCMC output)
+
+================================================================================
+🎯 ANALYSIS COMPLETE! Check reduced χ² ≈ 1.0-2.0 for good fit!
+If χ² still high (>3), full covariance matrix needed.

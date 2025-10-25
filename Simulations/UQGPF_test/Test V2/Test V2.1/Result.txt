@@ -1,0 +1,12 @@
+Loaded 89 CMB Cl points.
+Loaded covariance matrix with 7921 elements (reshaping to 89x89)
+Loaded 1701 valid SNIa points.
+100%|██████████| 12000/12000 [02:46<00:00, 71.88it/s]
+Best-fit parameters: [1.00000000e-01 6.99954184e-01 3.00000000e-01 4.17296194e+12
+ 5.01275708e-04 5.02716541e-01]
+Final chi2 (total): 506698794090356405174272.00
+chi2 (CMB): 506698794090356405174272.00
+chi2 (SNIa): 7557.18
+Degrees of freedom: 1784
+Reduced chi2: 284023987718809649152.00
+MCMC completed. Outputs generated: uqgpf_posteriors_v10.pdf, residuals_v10.csv, uqgpf_fit_v10.pdf, latex_table_v10.tex

@@ -1,0 +1,109 @@
+import numpy as np
+from scipy.integrate import quad
+import emcee
+import matplotlib.pyplot as plt
+from corner import corner
+
+# Constants
+c = 299792.458  # km/s
+rho_LQC = 5.1e93  # g/cm^3 (corrected units, huge value so enhancement tiny)
+m_a = 1e-22  # eV
+g_ae_standard = 1e-15
+g_aPsi = 1e-10  # new: axion-consciousness coupling
+
+# Expanded mock data (from your files, e.g., residuals_uqcmf_v1_10.csv sample; add more)
+z_data = np.linspace(0.01, 1.5, 20)  # more points for stability
+mu_obs = 5 * np.log10( (c / 70) * z_data * (1 + z_data / 2) ) + 25 + np.random.normal(0, 0.15, len(z_data))  # realistic mock
+sigma_mu = np.full_like(z_data, 0.15)  # uniform errors
+cov_matrix = np.diag(sigma_mu**2)  # simulate full cov; load real from files
+
+# Improved E_z (realistic axion: Omega_a * (1+z)^{3(1+w_a)} with w_a=-1 for CDM-like)
+def E_z(z, Omega_m, delta_Psi=1e-12):
+    Omega_Lambda = 1 - Omega_m
+    Omega_a = 0.05  # smaller fraction
+    return np.sqrt(Omega_m * (1 + z)**3 + Omega_Lambda + Omega_a * (1 + z)**3 + delta_Psi * (1 + z)**0.5)
+
+# rho_z (simplified, in arbitrary units since rho_LQC >> rho_cosmo)
+def rho_z(z, Omega_m, h):
+    return Omega_m * (1 + z)**3 + (1 - Omega_m)  # normalized
+
+# Improved g_ae_eff with consciousness feedback
+def g_ae_eff(z, Omega_m, h):
+    rho = rho_z(z, Omega_m, h)
+    Psi_sq = 1e-12 * (1 + z)**0.5  # simple |Psi|^2 model
+    return g_ae_standard * (1 + rho / rho_LQC + g_aPsi * Psi_sq)
+
+# Improved luminosity distance
+def luminosity_distance_improved(z, H0, Omega_m, sigma_UQCMF=1e-12):
+    if z <= 0: return 0
+    h = H0 / 100
+    def integrand(zz):
+        return 1 / E_z(zz, Omega_m)
+    integral, _ = quad(integrand, 0, z)
+    DL_base = (c / H0) * (1 + z) * integral  # Mpc
+    
+    g_eff_mean = np.mean([g_ae_eff(zz, Omega_m, h) for zz in np.linspace(0, z, 10)])
+    delta_mu = sigma_UQCMF * g_eff_mean * (1 + z)
+    
+    factor = 1 + delta_mu / (5 * np.log(10))
+    DL_eff = max(DL_base * factor, 1e-10)  # clamp to positive to avoid log(0)
+    mu = 5 * np.log10(DL_eff) + 25  # corrected: DL in Mpc, no /0.01 (standard formula is +25 for Mpc)
+    return mu
+
+# Log-likelihood
+def log_likelihood(theta, z_data, mu_obs, cov):
+    H0, Omega_m, sigma_UQCMF = theta
+    mu_model = np.array([luminosity_distance_improved(zz, H0, Omega_m, sigma_UQCMF) for zz in z_data])
+    delta_mu = mu_obs - mu_model
+    chi2 = np.dot(delta_mu, np.linalg.solve(cov, delta_mu.T))
+    return -0.5 * chi2
+
+# Strict log-prior
+def log_prior(theta):
+    H0, Omega_m, sigma_UQCMF = theta
+    if 60 < H0 < 80 and 0.1 < Omega_m < 0.5 and 0 < sigma_UQCMF < 1e-10:
+        return 0.0
+    return -np.inf
+
+# Log-posterior
+def log_posterior(theta, z_data, mu_obs, cov):
+    lp = log_prior(theta)
+    if not np.isfinite(lp):
+        return -np.inf
+    ll = log_likelihood(theta, z_data, mu_obs, cov)
+    if not np.isfinite(ll):
+        return -np.inf
+    return lp + ll
+
+# MCMC
+ndim = 3
+nwalkers = 32
+nsteps = 5000  # increased for better convergence
+initial = np.array([73.5, 0.24, 1e-12]) + 1e-4 * np.random.randn(nwalkers, ndim)  # smaller perturbation
+
+sampler = emcee.EnsembleSampler(nwalkers, ndim, log_posterior, args=(z_data, mu_obs, cov_matrix))
+sampler.run_mcmc(initial, nsteps, progress=True)
+
+# Results
+samples = sampler.get_chain(discard=1000, flat=True)  # longer burn-in
+H0_mean, Omega_m_mean, sigma_UQCMF_mean = np.percentile(samples, 50, axis=0)
+chi2_red = -2 * log_likelihood([H0_mean, Omega_m_mean, sigma_UQCMF_mean], z_data, mu_obs, cov_matrix) / (len(z_data) - ndim)
+
+print(f"Best-fit: H0 = {H0_mean:.2f} km/s/Mpc, Omega_m = {Omega_m_mean:.3f}, sigma_UQCMF = {sigma_UQCMF_mean:.2e}")
+print(f"Reduced chi^2 = {chi2_red:.2f}")
+print(f"g_ae_eff at z=0.1: {g_ae_eff(0.1, Omega_m_mean, H0_mean/100):.2e} (enhancement ~{ (g_ae_eff(0.1, Omega_m_mean, H0_mean/100) / g_ae_standard - 1):.2e})")
+
+# Plots
+fig = corner(samples, labels=["H0", "Omega_m", "sigma_UQCMF"], truths=[73.5, 0.24, 1e-12])
+plt.savefig("uqcmf_improved_posterior_v1_12_5.png")
+
+z_plot = np.linspace(0.01, 1.5, 100)
+mu_model = np.array([luminosity_distance_improved(zz, H0_mean, Omega_m_mean, sigma_UQCMF_mean) for zz in z_plot])
+plt.figure(figsize=(8,6))
+plt.errorbar(z_data, mu_obs, yerr=sigma_mu, fmt='o', label='SNIa Data')
+plt.plot(z_plot, mu_model, 'r-', label=f'UQCMF v1.12.5 (H0={H0_mean:.1f})')
+plt.xlabel('Redshift z')
+plt.ylabel('Distance Modulus μ (mag)')
+plt.legend()
+plt.savefig("uqcmf_hubble_improved_v1_12_5.png")
+plt.show()

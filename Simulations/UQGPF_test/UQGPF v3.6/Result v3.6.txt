@@ -1,0 +1,26 @@
+/usr/local/lib/python3.12/dist-packages/emcee/moves/red_blue.py:99: RuntimeWarning: invalid value encountered in scalar subtract
+  lnpdiff = f + nlp - state.log_prob[j]
+100%|█████████▉| 99999/100000 [2:08:37<00:00, 14.80it/s]/usr/local/lib/python3.12/dist-packages/emcee/moves/red_blue.py:99: RuntimeWarning: invalid value encountered in scalar subtract
+  lnpdiff = f + nlp - state.log_prob[j]
+/usr/local/lib/python3.12/dist-packages/emcee/moves/red_blue.py:99: RuntimeWarning: invalid value encountered in scalar subtract
+  lnpdiff = f + nlp - state.log_prob[j]
+100%|██████████| 100000/100000 [2:08:37<00:00, 12.96it/s]
+Removed no burn in
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+/tmp/ipython-input-2236240529.py in <cell line: 0>()
+    399 if __name__ == "__main__":
+    400     start_time = time.time()
+--> 401     samples, best_theta = run_mcmc()
+    402     print(f"Best parameters: Omega_m={best_theta[0]:.4f}, h={best_theta[1]:.4f}, gamma={best_theta[2]:.4f}, f_a={best_theta[3]:.4e}, m_a={best_theta[4]:.4e}, lambda_s={best_theta[5]:.4f}, k={best_theta[6]:.4f}, ell_damp={best_theta[7]:.4f}, nu_cross={best_theta[8]:.4e}")
+    403     print(f"Execution time: {time.time() - start_time:.2f} seconds")
+
+2 frames
+/usr/local/lib/python3.12/dist-packages/getdist/plots.py in get_subplot_plotter(cls, subplot_size, width_inch, scaling, rc_sizes, subplot_size_ratio, **kwargs)
+    746     ) -> "GetDistPlotter":
+    747         plotter = cls(**kwargs)
+--> 748         plotter.settings.set_with_subplot_size(subplot_size or 2, size_ratio=subplot_size_ratio)
+    749         if scaling is not None:
+    750             plotter.settings.scaling = scaling
+
+AttributeError: 'dict' object has no attribute 'set_with_subplot_size'

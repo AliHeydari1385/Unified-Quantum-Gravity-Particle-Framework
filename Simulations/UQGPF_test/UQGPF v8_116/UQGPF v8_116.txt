@@ -1,0 +1,315 @@
+# UQGPF v8.116 - Optimized CAMB Precomputation with Correct Dark Energy Setup and Multiprocessing
+# Changes from v8.115:
+# - Updated CAMB dark energy setup: Use pars.set_dark_energy(w=w, wa=wa, dark_energy_model='fluid') for stability.
+# - Reduced grid resolution to 8x8x8 (512 points) for faster precomputation while maintaining coverage (same ranges).
+# - Added multiprocessing for precompute_grids to speed up (using 4 processes; adjust based on environment).
+# - Increased lens_potential_accuracy=1 to balance speed and accuracy (was 2, which is slower).
+# - In get_theory_cl and get_theory_mu, improved nan handling and shape checks.
+# - Added progress bar with tqdm for precomputation loop.
+# - Fixed deprecation warnings by using include_groups=False in groupby.apply.
+# - Adjusted priors slightly for gamma (1.0 to 6.0) based on physical plausibility.
+
+!pip install camb emcee corner getdist tqdm h5py numpy scipy matplotlib pandas joblib -q
+
+import numpy as np
+from scipy.interpolate import interpn
+import camb
+from camb import model
+import emcee
+import corner
+import matplotlib.pyplot as plt
+import pandas as pd
+import os
+import h5py
+from tqdm import tqdm
+from joblib import Parallel, delayed
+import warnings
+warnings.filterwarnings("ignore", category=RuntimeWarning)
+warnings.filterwarnings("ignore", category=DeprecationWarning)  # Suppress deprecation for now
+
+# Constants
+LMAX = 2500
+LMIN = 2
+NUM_L = LMAX - LMIN + 1
+VERSION = 'v8_116'
+NPARAMS = 7  # Omega_m, h, gamma, beta, alpha, M_tcalib, scale_rpower
+NWALKERS = 128
+NSTEPS = 5000
+BURN_IN = 1000
+THIN = 15
+N_PROCS = 4  # For multiprocessing
+
+# Data Paths (assuming files are available in /content/)
+REFERENCE_DIR = '/content/'  # Adjust if needed
+SNIA_DATA_PATH = os.path.join(REFERENCE_DIR, 'Pantheon+SH0ES.dat')
+SNIA_COV_PATH = os.path.join(REFERENCE_DIR, 'Pantheon+SH0ES_STAT+SYS.cov')
+CMB_CL_PATH = os.path.join(REFERENCE_DIR, 'ACT+SPT_cl.dat')
+CMB_COV_PATH = os.path.join(REFERENCE_DIR, 'ACT+SPT_cov.dat')
+BBL_ACT_SOUTH_PATH = os.path.join(REFERENCE_DIR, 'Bbl_148_south_v2p2.dat')
+BBL_ACT_EQUA_PATH = os.path.join(REFERENCE_DIR, 'Bbl_148_equa_v2p2.dat')
+BBL_SPT_PATH = os.path.join(REFERENCE_DIR, 'Bbl_150_spt_v2p2.dat')
+GRID_FILE = f'/content/camb_grid_{VERSION}.npz'
+
+# Load Data with Advanced Grouping
+def load_data():
+    # Read without header, skip the header line
+    snia_df = pd.read_csv(SNIA_DATA_PATH, sep=r'\s+', header=None, skiprows=1, engine='python')
+    
+    # Check if most rows have 47 columns
+    if snia_df.shape[1] != 47:
+        raise ValueError(f"Expected 47 columns, but got {snia_df.shape[1]}")
+    
+    # Select by index: 0=CID, 4=zCMB, 5=zCMBERR, 8=m_b_corr, 9=m_b_corr_err_DIAG
+    snia_df = snia_df[[0, 4, 5, 8, 9]]
+    snia_df.columns = ['CID', 'zCMB', 'zCMBERR', 'm_b_corr', 'm_b_corr_err_DIAG']
+    
+    # Convert to appropriate types
+    snia_df['CID'] = snia_df['CID'].astype(str)
+    for col in ['zCMB', 'zCMBERR', 'm_b_corr', 'm_b_corr_err_DIAG']:
+        snia_df[col] = pd.to_numeric(snia_df[col], errors='coerce')
+    snia_df = snia_df.dropna()
+    
+    # Detect duplicates and log
+    duplicates = snia_df[snia_df.duplicated(subset=['CID'], keep=False)]
+    if not duplicates.empty:
+        print(f"Detected {len(duplicates)} entries with potential temporal links (duplicates). Grouping them.")
+        with open(f'duplicates_log_{VERSION}.txt', 'w') as f:
+            f.write(duplicates.to_string())
+    else:
+        print("No duplicates detected; no temporal links.")
+
+    # Weighted average functions
+    def weighted_avg(group, col, err_col):
+        weights = 1 / group[err_col]**2
+        return np.average(group[col], weights=weights)
+    
+    def weighted_err(group, err_col):
+        return 1 / np.sqrt(np.sum(1 / group[err_col]**2))
+    
+    # Group by CID using apply with include_groups=False
+    def compute_weighted(group):
+        z_w = weighted_avg(group, 'zCMB', 'zCMBERR')
+        mb_w = weighted_avg(group, 'm_b_corr', 'm_b_corr_err_DIAG')
+        return pd.Series({'zCMB': z_w, 'm_b_corr': mb_w})
+    
+    unique_snia = snia_df.groupby('CID').apply(compute_weighted, include_groups=False).reset_index()
+    
+    # Combined errors
+    unique_z_err = snia_df.groupby('CID').apply(lambda g: weighted_err(g, 'zCMBERR'), include_groups=False).values
+    unique_mu_err = snia_df.groupby('CID').apply(lambda g: weighted_err(g, 'm_b_corr_err_DIAG'), include_groups=False).values
+    
+    snia_z = unique_snia['zCMB'].values
+    snia_mu = unique_snia['m_b_corr'].values
+    n = len(snia_z)
+    print(f"Processed {n} unique SNIa (after weighted averaging duplicates).")
+    
+    # Load SNIa covariance as flat array and reshape
+    cov_data = np.loadtxt(SNIA_COV_PATH, skiprows=1)
+    expected_size = 1701  # Known from dataset
+    if len(cov_data) != expected_size ** 2:
+        raise ValueError(f"Expected {expected_size**2} cov elements, got {len(cov_data)}")
+    full_cov = cov_data.reshape((expected_size, expected_size))
+    
+    # Approximate if n changed
+    if n != expected_size:
+        print(f"Warning: Number of SNIa reduced from {expected_size} to {n}; approximating cov as diagonal with combined variances.")
+        snia_cov = np.diag(unique_mu_err**2)
+    else:
+        snia_cov = full_cov
+    snia_inv_cov = np.linalg.inv(snia_cov)
+    
+    # CMB Cl - load only the Cl column
+    cmb_cl = np.loadtxt(CMB_CL_PATH, usecols=1)
+    
+    # Robust CMB cov loading: Collect all floats from file
+    with open(CMB_COV_PATH, 'r') as f:
+        lines = f.readlines()
+    cov_flat = []
+    for line in lines:
+        parts = line.strip().split()
+        for p in parts:
+            try:
+                cov_flat.append(float(p))
+            except ValueError:
+                pass  # Skip non-numeric
+    cov_flat = np.array(cov_flat)
+    
+    # Reshape to square matrix
+    if cov_flat.ndim != 1 or len(cov_flat) == 0:
+        raise ValueError("Failed to load CMB cov data.")
+    m_sq = len(cov_flat)
+    m = int(np.sqrt(m_sq))
+    if m * m != m_sq:
+        raise ValueError(f"Cannot reshape CMB cov: len={m_sq} not a perfect square.")
+    cmb_cov = cov_flat.reshape((m, m))
+    cmb_inv_cov = np.linalg.inv(cmb_cov)
+    print(f"Loaded CMB cov as {m}x{m} matrix.")
+    
+    # BBL (using one for simplicity; can average if needed)
+    bbl = np.loadtxt(BBL_ACT_SOUTH_PATH)[:, 1:]
+    
+    return snia_z, snia_mu, snia_cov, snia_inv_cov, cmb_cl, cmb_inv_cov, bbl, m
+
+snia_z, snia_mu, snia_cov, snia_inv_cov, cmb_cl, cmb_inv_cov, bbl, NCMB = load_data()
+NSNIA = len(snia_z)
+
+# Precompute CAMB Grids with Multiprocessing
+def compute_point(om, h, gamma, idx):
+    try:
+        pars = camb.CAMBparams()
+        pars.set_cosmology(H0=h*100, ombh2=0.0224, omch2=(om - 0.0224 / h**2) * h**2, omk=0)
+        pars.set_dark_energy(w=(gamma - 3)/3, wa=0, dark_energy_model='fluid')
+        pars.set_for_lmax(LMAX, lens_potential_accuracy=1)
+        results = camb.get_results(pars)
+        
+        cl = results.get_cmb_power_spectra(pars, CMB_unit='muK')['total'][:, 0]
+        cl_out = np.full(LMAX + 1, np.nan)
+        cl_out[:min(len(cl), LMAX + 1)] = cl
+        
+        mu_out = np.full(NSNIA, np.nan)
+        for m, z in enumerate(snia_z):
+            dl = results.luminosity_distance(z)
+            mu_out[m] = 5 * np.log10(dl) + 25
+        
+        return idx, cl_out, mu_out, None
+    except Exception as e:
+        return idx, None, None, f"Error for om={om:.2f}, h={h:.2f}, gamma={gamma:.2f}: {str(e)}"
+
+def precompute_grids():
+    om_vals = np.linspace(0.05, 0.55, 8)
+    h_vals = np.linspace(0.4, 1.1, 8)
+    gamma_vals = np.linspace(1.5, 5.5, 8)
+    grid_points = (om_vals, h_vals, gamma_vals)
+    
+    cl_grid = np.full((len(om_vals), len(h_vals), len(gamma_vals), LMAX + 1), np.nan)
+    mu_grid = np.full((len(om_vals), len(h_vals), len(gamma_vals), NSNIA), np.nan)
+    
+    # Prepare list of tasks
+    tasks = []
+    idx = 0
+    for i, om in enumerate(om_vals):
+        for j, h in enumerate(h_vals):
+            for k, gamma in enumerate(gamma_vals):
+                tasks.append((om, h, gamma, (i, j, k)))
+                idx += 1
+    
+    # Run in parallel with progress
+    results = Parallel(n_jobs=N_PROCS)(delayed(compute_point)(*task) for task in tqdm(tasks, desc="Precomputing Grid"))
+    
+    rejections = []
+    for res in results:
+        (i, j, k), cl_out, mu_out, err = res
+        if err is None:
+            cl_grid[i, j, k] = cl_out
+            mu_grid[i, j, k] = mu_out
+        else:
+            rejections.append(err)
+    
+    np.savez(GRID_FILE, grid_points=grid_points, cl_grid=cl_grid, mu_grid=mu_grid)
+    with open(f'rejection_reasons_{VERSION}.txt', 'w') as f:
+        f.write('\n'.join(rejections))
+    
+    return grid_points, cl_grid, mu_grid
+
+if not os.path.exists(GRID_FILE):
+    grid_points, cl_grid, mu_grid = precompute_grids()
+else:
+    data = np.load(GRID_FILE)
+    grid_points = data['grid_points']
+    cl_grid = data['cl_grid']
+    mu_grid = data['mu_grid']
+
+# Theory Functions
+def get_theory_cl(params):
+    om, h, gamma = params[:3]
+    try:
+        cl_theory = interpn(grid_points, cl_grid, (om, h, gamma), method='linear', bounds_error=True)
+        if cl_theory.shape != (LMAX + 1,):
+            return np.full(NCMB, np.nan)
+        cl_theory = cl_theory[LMIN:LMAX+1]
+        if cl_theory.shape != (NUM_L,):
+            return np.full(NCMB, np.nan)
+        cl_binned = np.dot(bbl, cl_theory)
+        if len(cl_binned) != NCMB:
+            return np.full(NCMB, np.nan)
+        return cl_binned
+    except:
+        return np.full(NCMB, np.nan)
+
+def get_theory_mu(params):
+    om, h, gamma, beta, alpha, M_tcalib, scale_rpower = params
+    try:
+        mu_theory = interpn(grid_points, mu_grid, (om, h, gamma), method='linear', bounds_error=True)
+        if mu_theory.shape != (NSNIA,):
+            return np.full(NSNIA, np.nan)
+        mu_theory += M_tcalib
+        # Placeholder for model extensions (uncomment if needed)
+        # mu_theory += beta * snia_z + alpha * snia_z**2 + scale_rpower * snia_z**3
+        return mu_theory
+    except:
+        return np.full(NSNIA, np.nan)
+
+# Likelihood
+def log_likelihood(params):
+    mu_th = get_theory_mu(params)
+    if np.any(np.isnan(mu_th)):
+        return -np.inf
+    delta_mu = snia_mu - mu_th
+    chi2_snia = delta_mu @ snia_inv_cov @ delta_mu
+    
+    cl_th = get_theory_cl(params)
+    if np.any(np.isnan(cl_th)):
+        return -np.inf
+    delta_cl = cmb_cl - cl_th
+    chi2_cmb = delta_cl @ cmb_inv_cov @ delta_cl
+    
+    return -0.5 * (chi2_snia + chi2_cmb)
+
+# Prior
+def log_prior(params):
+    om, h, gamma, beta, alpha, M_tcalib, scale_rpower = params
+    if (0.05 < om < 0.55 and 0.4 < h < 1.1 and 1.0 < gamma < 6.0 and
+        10 < beta < 100 and 400 < alpha < 900 and -9.5 < M_tcalib < -8.0 and
+        -0.1 < scale_rpower < 0.0):
+        return 0.0
+    return -np.inf
+
+def log_prob(params):
+    lp = log_prior(params)
+    if not np.isfinite(lp):
+        return -np.inf
+    ll = log_likelihood(params)
+    return lp + ll if np.isfinite(ll) else -np.inf
+
+# MCMC
+initial = np.array([0.3, 0.7, 3.0, 50, 600, -9.0, -0.05]) + 1e-3 * np.random.randn(NWALKERS, NPARAMS)
+sampler = emcee.EnsembleSampler(NWALKERS, NPARAMS, log_prob)
+sampler.run_mcmc(initial, NSTEPS, progress=True)
+
+# Post-processing
+flatsamples = sampler.get_chain(discard=BURN_IN, thin=THIN, flat=True)
+labels = ['Omega_m', 'h', 'gamma', 'beta', 'alpha', 'M_tcalib', 'scale_rpower']
+
+fig = corner.corner(flatsamples, labels=labels)
+plt.savefig(f'uqgpf_posteriors_{VERSION}.pdf')
+
+best_params = np.median(flatsamples, axis=0)
+
+sort_idx = np.argsort(snia_z)
+fig, ax = plt.subplots()
+ax.errorbar(snia_z[sort_idx], snia_mu[sort_idx], yerr=np.sqrt(np.diag(snia_cov))[sort_idx], fmt='o', label='Data')
+ax.plot(snia_z[sort_idx], get_theory_mu(best_params)[sort_idx], label='UQGPF Fit')
+ax.legend()
+plt.savefig(f'uqgpf_fit_{VERSION}.pdf')
+
+residuals = snia_mu - get_theory_mu(best_params)
+pd.DataFrame({'residuals': residuals}).to_csv(f'residuals_{VERSION}.csv', index=False)
+
+with open(f'latex_table_{VERSION}.tex', 'w') as f:
+    f.write(r'\begin{table}' + '\n')
+    f.write(r'\caption{Best-fit parameters}' + '\n')
+    for label, val in zip(labels, best_params):
+        f.write(f'{label} & {val:.3f} \\\\' + '\n')
+    f.write(r'\end{table}')
+
+print("Run complete. Check output files and duplicates_log_v8_116.txt for temporal link details.")

@@ -1,0 +1,566 @@
+Rejected Omega_m=0.1, h=0.5, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.5, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.5, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.5, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.5, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.5555555555555556, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.5555555555555556, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.5555555555555556, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.5555555555555556, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.5555555555555556, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.6111111111111112, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.6111111111111112, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.6111111111111112, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.6111111111111112, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.6111111111111112, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.6666666666666666, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.6666666666666666, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.6666666666666666, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.6666666666666666, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.6666666666666666, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.7222222222222222, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.7222222222222222, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.7222222222222222, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.7222222222222222, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.7222222222222222, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.7777777777777778, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.7777777777777778, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.7777777777777778, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.7777777777777778, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.7777777777777778, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.8333333333333333, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.8333333333333333, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.8333333333333333, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.8333333333333333, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.8333333333333333, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.8888888888888888, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.8888888888888888, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.8888888888888888, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.8888888888888888, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.8888888888888888, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.9444444444444444, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.9444444444444444, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.9444444444444444, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.9444444444444444, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=0.9444444444444444, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=1.0, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=1.0, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=1.0, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=1.0, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.1, h=1.0, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.5, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.5, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.5, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.5, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.5, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.5555555555555556, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.5555555555555556, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.5555555555555556, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.5555555555555556, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.5555555555555556, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.6111111111111112, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.6111111111111112, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.6111111111111112, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.6111111111111112, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.6111111111111112, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.6666666666666666, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.6666666666666666, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.6666666666666666, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.6666666666666666, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.6666666666666666, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.7222222222222222, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.7222222222222222, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.7222222222222222, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.7222222222222222, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.7222222222222222, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.7777777777777778, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.7777777777777778, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.7777777777777778, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.7777777777777778, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.7777777777777778, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.8333333333333333, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.8333333333333333, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.8333333333333333, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.8333333333333333, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.8333333333333333, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.8888888888888888, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.8888888888888888, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.8888888888888888, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.8888888888888888, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.8888888888888888, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.9444444444444444, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.9444444444444444, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.9444444444444444, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.9444444444444444, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=0.9444444444444444, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=1.0, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=1.0, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=1.0, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=1.0, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.14444444444444446, h=1.0, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.5, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.5, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.5, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.5, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.5, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.5555555555555556, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.5555555555555556, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.5555555555555556, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.5555555555555556, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.5555555555555556, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.6111111111111112, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.6111111111111112, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.6111111111111112, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.6111111111111112, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.6111111111111112, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.6666666666666666, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.6666666666666666, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.6666666666666666, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.6666666666666666, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.6666666666666666, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.7222222222222222, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.7222222222222222, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.7222222222222222, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.7222222222222222, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.7222222222222222, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.7777777777777778, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.7777777777777778, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.7777777777777778, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.7777777777777778, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.7777777777777778, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.8333333333333333, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.8333333333333333, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.8333333333333333, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.8333333333333333, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.8333333333333333, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.8888888888888888, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.8888888888888888, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.8888888888888888, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.8888888888888888, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.8888888888888888, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.9444444444444444, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.9444444444444444, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.9444444444444444, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.9444444444444444, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=0.9444444444444444, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=1.0, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=1.0, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=1.0, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=1.0, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.18888888888888888, h=1.0, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.5, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.5, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.5, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.5, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.5, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.5555555555555556, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.5555555555555556, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.5555555555555556, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.5555555555555556, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.5555555555555556, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.6111111111111112, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.6111111111111112, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.6111111111111112, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.6111111111111112, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.6111111111111112, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.6666666666666666, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.6666666666666666, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.6666666666666666, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.6666666666666666, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.6666666666666666, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.7222222222222222, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.7222222222222222, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.7222222222222222, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.7222222222222222, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.7222222222222222, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.7777777777777778, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.7777777777777778, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.7777777777777778, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.7777777777777778, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.7777777777777778, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.8333333333333333, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.8333333333333333, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.8333333333333333, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.8333333333333333, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.8333333333333333, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.8888888888888888, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.8888888888888888, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.8888888888888888, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.8888888888888888, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.8888888888888888, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.9444444444444444, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.9444444444444444, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.9444444444444444, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.9444444444444444, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=0.9444444444444444, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=1.0, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=1.0, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=1.0, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=1.0, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.23333333333333334, h=1.0, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.5, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.5, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.5, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.5, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.5, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.5555555555555556, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.5555555555555556, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.5555555555555556, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.5555555555555556, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.5555555555555556, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.6111111111111112, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.6111111111111112, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.6111111111111112, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.6111111111111112, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.6111111111111112, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.6666666666666666, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.6666666666666666, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.6666666666666666, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.6666666666666666, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.6666666666666666, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.7222222222222222, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.7222222222222222, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.7222222222222222, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.7222222222222222, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.7222222222222222, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.7777777777777778, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.7777777777777778, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.7777777777777778, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.7777777777777778, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.7777777777777778, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.8333333333333333, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.8333333333333333, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.8333333333333333, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.8333333333333333, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.8333333333333333, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.8888888888888888, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.8888888888888888, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.8888888888888888, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.8888888888888888, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.8888888888888888, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.9444444444444444, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.9444444444444444, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.9444444444444444, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.9444444444444444, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=0.9444444444444444, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=1.0, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=1.0, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=1.0, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=1.0, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.2777777777777778, h=1.0, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.5, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.5, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.5, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.5, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.5, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.5555555555555556, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.5555555555555556, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.5555555555555556, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.5555555555555556, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.5555555555555556, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.6111111111111112, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.6111111111111112, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.6111111111111112, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.6111111111111112, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.6111111111111112, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.6666666666666666, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.6666666666666666, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.6666666666666666, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.6666666666666666, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.6666666666666666, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.7222222222222222, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.7222222222222222, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.7222222222222222, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.7222222222222222, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.7222222222222222, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.7777777777777778, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.7777777777777778, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.7777777777777778, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.7777777777777778, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.7777777777777778, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.8333333333333333, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.8333333333333333, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.8333333333333333, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.8333333333333333, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.8333333333333333, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.8888888888888888, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.8888888888888888, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.8888888888888888, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.8888888888888888, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.8888888888888888, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.9444444444444444, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.9444444444444444, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.9444444444444444, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.9444444444444444, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=0.9444444444444444, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=1.0, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=1.0, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=1.0, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=1.0, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.32222222222222224, h=1.0, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.5, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.5, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.5, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.5, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.5, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.5555555555555556, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.5555555555555556, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.5555555555555556, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.5555555555555556, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.5555555555555556, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.6111111111111112, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.6111111111111112, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.6111111111111112, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.6111111111111112, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.6111111111111112, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.6666666666666666, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.6666666666666666, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.6666666666666666, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.6666666666666666, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.6666666666666666, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.7222222222222222, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.7222222222222222, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.7222222222222222, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.7222222222222222, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.7222222222222222, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.7777777777777778, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.7777777777777778, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.7777777777777778, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.7777777777777778, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.7777777777777778, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.8333333333333333, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.8333333333333333, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.8333333333333333, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.8333333333333333, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.8333333333333333, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.8888888888888888, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.8888888888888888, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.8888888888888888, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.8888888888888888, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.8888888888888888, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.9444444444444444, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.9444444444444444, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.9444444444444444, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.9444444444444444, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=0.9444444444444444, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=1.0, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=1.0, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=1.0, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=1.0, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.3666666666666667, h=1.0, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.5, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.5, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.5, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.5, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.5, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.5555555555555556, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.5555555555555556, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.5555555555555556, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.5555555555555556, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.5555555555555556, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.6111111111111112, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.6111111111111112, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.6111111111111112, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.6111111111111112, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.6111111111111112, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.6666666666666666, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.6666666666666666, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.6666666666666666, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.6666666666666666, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.6666666666666666, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.7222222222222222, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.7222222222222222, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.7222222222222222, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.7222222222222222, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.7222222222222222, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.7777777777777778, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.7777777777777778, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.7777777777777778, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.7777777777777778, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.7777777777777778, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.8333333333333333, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.8333333333333333, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.8333333333333333, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.8333333333333333, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.8333333333333333, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.8888888888888888, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.8888888888888888, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.8888888888888888, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.8888888888888888, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.8888888888888888, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.9444444444444444, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.9444444444444444, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.9444444444444444, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.9444444444444444, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=0.9444444444444444, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=1.0, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=1.0, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=1.0, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=1.0, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4111111111111111, h=1.0, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.5, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.5, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.5, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.5, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.5, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.5555555555555556, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.5555555555555556, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.5555555555555556, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.5555555555555556, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.5555555555555556, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.6111111111111112, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.6111111111111112, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.6111111111111112, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.6111111111111112, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.6111111111111112, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.6666666666666666, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.6666666666666666, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.6666666666666666, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.6666666666666666, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.6666666666666666, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.7222222222222222, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.7222222222222222, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.7222222222222222, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.7222222222222222, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.7222222222222222, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.7777777777777778, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.7777777777777778, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.7777777777777778, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.7777777777777778, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.7777777777777778, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.8333333333333333, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.8333333333333333, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.8333333333333333, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.8333333333333333, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.8333333333333333, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.8888888888888888, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.8888888888888888, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.8888888888888888, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.8888888888888888, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.8888888888888888, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.9444444444444444, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.9444444444444444, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.9444444444444444, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.9444444444444444, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=0.9444444444444444, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=1.0, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=1.0, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=1.0, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=1.0, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.4555555555555556, h=1.0, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.5, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.5, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.5, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.5, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.5, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.5555555555555556, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.5555555555555556, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.5555555555555556, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.5555555555555556, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.5555555555555556, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.6111111111111112, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.6111111111111112, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.6111111111111112, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.6111111111111112, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.6111111111111112, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.6666666666666666, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.6666666666666666, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.6666666666666666, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.6666666666666666, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.6666666666666666, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.7222222222222222, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.7222222222222222, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.7222222222222222, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.7222222222222222, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.7222222222222222, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.7777777777777778, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.7777777777777778, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.7777777777777778, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.7777777777777778, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.7777777777777778, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.8333333333333333, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.8333333333333333, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.8333333333333333, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.8333333333333333, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.8333333333333333, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.8888888888888888, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.8888888888888888, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.8888888888888888, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.8888888888888888, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.8888888888888888, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.9444444444444444, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.9444444444444444, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.9444444444444444, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.9444444444444444, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=0.9444444444444444, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=1.0, gamma=3.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=1.0, gamma=4.0: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=1.0, gamma=4.666666666666666: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=1.0, gamma=5.333333333333333: dark energy model has w + wa > 0, giving w>0 at high redshift
+Rejected Omega_m=0.5, h=1.0, gamma=6.0: dark energy model has w + wa > 0, giving w>0 at high redshiftSkipped phi_dm for z=0.0012, ell=11.5: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0036, ell=33.6: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0046, ell=43.7: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0070, ell=65.8: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0060, ell=56.0: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0057, ell=53.3: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0073, ell=68.3: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0072, ell=67.8: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0078, ell=73.2: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0084, ell=78.9: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0100, ell=93.6: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0105, ell=98.4: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0105, ell=98.4: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0119, ell=111.4: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0141, ell=131.7: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0129, ell=120.6: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0141, ell=131.6: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0142, ell=132.9: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0148, ell=138.7: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0153, ell=143.5: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0163, ell=152.3: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0159, ell=149.1: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0161, ell=150.5: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0165, ell=154.1: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0175, ell=163.3: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0180, ell=167.8: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0196, ell=182.5: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0193, ell=179.8: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0198, ell=185.1: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0209, ell=195.2: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0210, ell=196.2: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0229, ell=213.6: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0218, ell=203.3: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0235, ell=218.9: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0233, ell=216.9: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0242, ell=225.6: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0242, ell=225.4: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0239, ell=223.1: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0248, ell=231.0: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0247, ell=229.9: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0253, ell=235.0: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0260, ell=242.2: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0266, ell=247.4: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0283, ell=262.8: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0273, ell=254.0: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0284, ell=264.4: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0305, ell=283.2: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0298, ell=276.6: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0309, ell=287.1: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0316, ell=292.9: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0312, ell=289.8: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0321, ell=298.0: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0321, ell=298.0: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0331, ell=306.8: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0337, ell=312.4: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0352, ell=325.9: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0364, ell=337.3: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0363, ell=335.8: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0373, ell=345.3: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0400, ell=369.3: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0428, ell=395.0: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0428, ell=394.6: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0450, ell=414.5: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0469, ell=432.2: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0502, ell=461.5: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0507, ell=466.3: sigma_phi=0.0000e+00
+Skipped phi_dm for z=0.0527, ell=483.9: sigma_phi=0.0000e+00

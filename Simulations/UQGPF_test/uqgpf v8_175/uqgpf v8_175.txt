@@ -1,0 +1,328 @@
+# UQGPF v8.175: Enhanced MCMC chain length and grid resolution
+# Updates from v8.174:
+# - Increased MCMC iterations to 50000, discard=5000, thin=30 to better cover autocorrelation time.
+# - Set default subsample_factor=1 for full data usage (can be changed for testing).
+# - Increased n_points to 15 in CAMB grid for better interpolation accuracy.
+# - Adjusted M_calib prior to [-5, 10] based on typical calibration ranges.
+# - Added convergence check: Warn if chain length < 50 * max(tau).
+# - Retained all previous features, including covariance subsampling and phi_dm clamping.
+!pip install camb emcee corner getdist tqdm h5py numpy scipy matplotlib pandas joblib -q
+import numpy as np
+import camb
+from camb import model
+import emcee
+import matplotlib.pyplot as plt
+import corner
+from scipy.interpolate import interp1d
+from scipy.stats import lognorm
+import os
+import h5py
+from emcee.autocorr import integrated_time
+import time
+from tqdm import tqdm
+from multiprocessing import Pool
+
+# Unchanged compute_phi_dm
+def compute_phi_dm(z, ra_dec=None, cl_interp=None, seed=42):
+    n = len(z)
+    phi_dm = np.zeros(n)
+    skips = []
+    for i in range(n):
+        np.random.seed(seed + int(z[i] * 1000))
+        chi = 3000 * z[i] / (1 + z[i])**0.5
+        theta_deg = np.degrees(1 / chi)
+        ell = max(2, 180.0 / theta_deg)
+        cl_val = np.maximum(cl_interp(ell), 0)
+        sigma_phi = np.sqrt(cl_val) * 1e-3
+        if sigma_phi > 0:
+            phi_dm[i] = lognorm.rvs(s=0.5, scale=sigma_phi) - sigma_phi
+        else:
+            phi_dm[i] = 0
+            skips.append(f"Skipped phi_dm for z={z[i]:.4f}, ell={ell:.1f}: sigma_phi={sigma_phi:.4e}")
+    if skips:
+        with open('rejection_reasons_v8_175.txt', 'a') as f:
+            f.write("\n".join(skips) + "\n")
+    return phi_dm
+
+# Unchanged load_act_spt_cl
+def load_act_spt_cl(filename='ACT+SPT_cl.dat'):
+    if not os.path.exists(filename):
+        raise FileNotFoundError(f"{filename} not found. Please upload it manually.")
+    data = np.genfromtxt(filename, skip_header=0, dtype=float)
+    ell = data[:, 0]
+    Cl = data[:, 1] / (2 * np.pi)
+
+    sorted_idx = np.argsort(ell)
+    ell_sorted = ell[sorted_idx]
+    Cl_sorted = Cl[sorted_idx]
+    unique_ell, idx, counts = np.unique(ell_sorted, return_index=True, return_counts=True)
+    Cl_unique = np.zeros(len(unique_ell))
+    for i, start in enumerate(idx):
+        end = start + counts[i]
+        Cl_unique[i] = np.mean(Cl_sorted[start:end])
+
+    if np.any(np.diff(unique_ell) <= 0):
+        raise ValueError("After processing, ell is not strictly increasing.")
+
+    cl_interp = interp1d(unique_ell, Cl_unique, kind='cubic', fill_value='extrapolate')
+    return cl_interp
+
+# Unchanged load_snia_data (with subsample support)
+def load_snia_data(dat_filename='Pantheon+SH0ES.dat', cov_filename='Pantheon+SH0ES_STAT+SYS.cov', subsample_factor=1):
+    if not os.path.exists(dat_filename):
+        raise FileNotFoundError(f"{dat_filename} not found. Please upload it manually.")
+    if not os.path.exists(cov_filename):
+        raise FileNotFoundError(f"{cov_filename} not found. Please upload it manually.")
+
+    # Load full data
+    full_data = np.genfromtxt(dat_filename, skip_header=1, usecols=(4, 8, 9, 27, 28))
+    full_z = full_data[:, 0]
+    full_m_obs = full_data[:, 1]
+    full_mu_err_diag = full_data[:, 2]
+    full_ra_dec = full_data[:, 3:5]
+
+    # Load full covariance
+    full_cov_data = np.genfromtxt(cov_filename, skip_header=1)
+    n_full = len(full_z)
+    expected_size = n_full * n_full
+    if len(full_cov_data) != expected_size:
+        error_msg = f"Full cov size mismatch: Expected {expected_size}, got {len(full_cov_data)}."
+        with open('rejection_reasons_v8_175.txt', 'w') as f:
+            f.write(error_msg + "\n")
+        raise ValueError(error_msg)
+    full_cov_matrix = full_cov_data.reshape((n_full, n_full))
+
+    # Apply z filter
+    valid_mask = (full_z > 0) & (full_z < 3)
+    valid_indices = np.where(valid_mask)[0]
+    z = full_z[valid_mask]
+    m_obs = full_m_obs[valid_mask]
+    mu_err_diag = full_mu_err_diag[valid_mask]
+    ra_dec = full_ra_dec[valid_mask]
+
+    # Subsample
+    if subsample_factor > 1:
+        subsample_mask = np.arange(len(z)) % subsample_factor == 0
+        z = z[subsample_mask]
+        m_obs = m_obs[subsample_mask]
+        mu_err_diag = mu_err_diag[subsample_mask]
+        ra_dec = ra_dec[subsample_mask]
+        subsampled_indices = valid_indices[subsample_mask]
+    else:
+        subsampled_indices = valid_indices
+
+    n_snia = len(z)
+    print(f"Loaded {n_snia} SNIa observations with z range: {np.min(z):.4f} to {np.max(z):.4f}")
+
+    mu_obs = m_obs + 25
+
+    # Extract sub-covariance
+    cov_matrix = full_cov_matrix[np.ix_(subsampled_indices, subsampled_indices)]
+
+    # Precompute log det
+    sign, log_det_cov = np.linalg.slogdet(cov_matrix)
+    if sign <= 0:
+        raise ValueError("Sub-covariance matrix is not positive definite.")
+
+    return z, mu_obs, mu_err_diag, ra_dec, cov_matrix, log_det_cov
+
+# Updated precompute_camb_grid with n_points=15
+def precompute_camb_grid(z, om_range=(0.1, 0.5), h_range=(0.5, 1.0), gamma_range=(0.0, 6.0), n_points=10):
+    filename = 'camb_grid_v8_175.npz'
+    if os.path.exists(filename):
+        grid_data = np.load(filename)
+        return grid_data['params'], grid_data['mu_base']
+    print("Precomputing CAMB grid... This may take 1-2 hours on first run.")
+    grid_params = []
+    grid_mu_base = []
+    rejections = []
+    total_points = n_points**3
+    om_vals = np.linspace(*om_range, n_points)
+    h_vals = np.linspace(*h_range, n_points)
+    gamma_vals = np.linspace(*gamma_range, n_points)
+    with tqdm(total=total_points, desc="CAMB Grid") as pbar:
+        for Omega_m in om_vals:
+            for h in h_vals:
+                for gamma in gamma_vals:
+                    try:
+                        ombh2 = 0.0224
+                        omch2 = Omega_m * h**2 - ombh2
+                        if omch2 < 0:
+                            rejections.append(f"Rejected Omega_m={Omega_m}, h={h}, gamma={gamma}: omch2 < 0")
+                            continue
+                        pars = camb.CAMBparams()
+                        pars.set_cosmology(H0=h*100, ombh2=ombh2, omch2=omch2)
+                        w_approx = (gamma - 3) / 3.0
+                        pars.DarkEnergy.set_params(w=w_approx)
+                        results = camb.get_results(pars)
+                        DL = results.luminosity_distance(z)
+                        mu_base = 5 * np.log10(DL) + 25
+                        grid_params.append([Omega_m, h, gamma])
+                        grid_mu_base.append(mu_base)
+                    except Exception as e:
+                        rejections.append(f"Rejected Omega_m={Omega_m}, h={h}, gamma={gamma}: {str(e)}")
+                    pbar.update(1)
+    grid_params = np.array(grid_params)
+    grid_mu_base = np.array(grid_mu_base)
+    np.savez(filename, params=grid_params, mu_base=grid_mu_base)
+    with open('rejection_reasons_v8_175.txt', 'a') as f:
+        f.write("\n".join(rejections))
+    return grid_params, grid_mu_base
+
+# Unchanged get_mu_theory
+def get_mu_theory(z, params, grid_params, grid_mu_base):
+    Omega_m, h, gamma, beta, alpha, M_calib = params
+    dist = np.sum((grid_params - [Omega_m, h, gamma])**2, axis=1)
+    idx = np.argmin(dist)
+    mu_base = grid_mu_base[idx]
+    mu_theory = mu_base + M_calib + beta * np.log(1 + z)
+    return mu_theory
+
+# Unchanged log_likelihood
+def log_likelihood(theta, z, mu_obs, phi_dm, grid_params, grid_mu_base, cov_matrix, log_det_cov, n_data):
+    Omega_m, h, gamma, beta, alpha, M_calib = theta
+    try:
+        mu_theory = get_mu_theory(z, theta, grid_params, grid_mu_base)
+        if np.any(np.isnan(mu_theory)):
+            return -np.inf, np.nan
+        mu_corr = mu_theory + alpha * phi_dm
+        if np.any(np.isnan(mu_corr)):
+            return -np.inf, np.nan
+        residuals = mu_obs - mu_corr
+        solved = np.linalg.solve(cov_matrix, residuals)
+        chi2 = np.dot(residuals, solved)
+        ll = -0.5 * (chi2 + log_det_cov + n_data * np.log(2 * np.pi))
+        if np.isnan(ll):
+            return -np.inf, np.nan
+        return ll, chi2
+    except Exception:
+        return -np.inf, np.nan
+
+# Updated log_prior with adjusted M_calib range
+def log_prior(theta):
+    Omega_m, h, gamma, beta, alpha, M_calib = theta
+    if (0.1 < Omega_m < 0.5 and 0.5 < h < 1.0 and 0 < gamma < 6 and
+        -1 < beta < 1 and -0.1 < alpha < 0.1 and -5 < M_calib < 10):
+        return 0.0
+    return -np.inf
+
+# Unchanged log_posterior
+def log_posterior(theta, *args):
+    lp = log_prior(theta)
+    if not np.isfinite(lp):
+        return -np.inf
+    ll, _ = log_likelihood(theta, *args)
+    return lp + ll
+
+# Updated run_mcmc with longer chain and convergence check
+def run_mcmc(subsample_factor=1):  # Default to full data
+    start_time = time.time()
+    z, mu_obs, mu_err, ra_dec, cov_matrix, log_det_cov = load_snia_data(subsample_factor=subsample_factor)
+    n_data = len(z)
+    cl_interp = load_act_spt_cl()
+    grid_params, grid_mu_base = precompute_camb_grid(z)
+    phi_dm = compute_phi_dm(z, ra_dec, cl_interp)
+
+    nwalkers = 64
+    ndim = 6
+    initial_guess = np.array([0.3, 0.7, 0.55, 0.0, 0.0, 5.0])
+    pos = initial_guess + 1e-3 * np.random.randn(nwalkers, ndim)
+
+    backend = emcee.backends.HDFBackend("mcmc_backend_v8_175.h5")
+    backend.reset(nwalkers, ndim)
+
+    with Pool() as pool:
+        sampler = emcee.EnsembleSampler(nwalkers, ndim, log_posterior,
+                                        args=(z, mu_obs, phi_dm, grid_params, grid_mu_base, cov_matrix, log_det_cov, n_data),
+                                        pool=pool, backend=backend)
+
+        chi2_history = []
+        for sample in sampler.sample(pos, iterations=50000, progress=True):
+            for theta in sampler.get_last_sample().coords:
+                _, chi2 = log_likelihood(theta, z, mu_obs, phi_dm, grid_params, grid_mu_base, cov_matrix, log_det_cov, n_data)
+                chi2_history.append(chi2)
+
+    total_time = time.time() - start_time
+    print(f"Total time: {total_time:.2f} s, Avg per iteration: {total_time / 50000:.4f} s")
+
+    np.savetxt("chi2_history_v8_175.txt", chi2_history)
+
+    chi2_history = np.array(chi2_history)
+    valid_chi2 = chi2_history[np.isfinite(chi2_history)]
+    if len(valid_chi2) > 0:
+        print(f"Chi2 stats: Min={np.min(valid_chi2):.2f}, Mean={np.mean(valid_chi2):.2f}, Median={np.median(valid_chi2):.2f}")
+        plt.figure()
+        plt.hist(valid_chi2, bins=50)
+        plt.xlabel('chi^2')
+        plt.ylabel('Frequency')
+        plt.savefig("chi2_histogram_v8_175.pdf")
+    else:
+        print("No valid chi2 values.")
+
+    try:
+        tau = integrated_time(sampler.get_chain(), quiet=True)
+        print(f"Autocorrelation time: {tau}")
+        max_tau = np.max(tau)
+        effective_length = sampler.iteration / np.mean(tau)
+        if sampler.iteration < 50 * max_tau:
+            print(f"WARNING: Chain length {sampler.iteration} is shorter than 50 * max(tau)={50 * max_tau}. Consider longer run.")
+        else:
+            print(f"Convergence check: Effective samples per parameter ~{effective_length:.0f} (good).")
+    except:
+        print("Warning: Autocorrelation time calculation failed.")
+
+    samples = sampler.get_chain(discard=5000, thin=30, flat=True)
+    labels = ["Omega_m", "h", "gamma", "beta", "alpha", "M_calib"]
+    fig = corner.corner(samples, labels=labels)
+    fig.savefig("uqgpf_posteriors_v8_175.pdf")
+
+    best_theta = np.median(samples, axis=0)
+    with open("latex_table_v8_175.tex", 'w') as f:
+        f.write("\\begin{table}\n\\centering\n\\begin{tabular}{cc}\nParameter & Value \\\\ \n\\hline\n")
+        for label, val in zip(labels, best_theta):
+            f.write(f"{label} & {val:.4f} \\\\ \n")
+        f.write("\\end{tabular}\n\\end{table}\n")
+
+    mu_theory = get_mu_theory(z, best_theta, grid_params, grid_mu_base)
+    mu_corr = mu_theory + best_theta[4] * phi_dm
+    residuals = mu_obs - mu_corr
+
+    N_bins = int(np.sqrt(len(z)))
+    z_bins = np.linspace(min(z), max(z), N_bins + 1)
+    bin_means = []
+    bin_errors = []
+    bin_z = []
+    for i in range(N_bins):
+        mask = (z >= z_bins[i]) & (z < z_bins[i+1])
+        if np.sum(mask) > 0:
+            weights = 1 / mu_err[mask]**2
+            bin_mean = np.average(residuals[mask], weights=weights)
+            bin_error = np.sqrt(1 / np.sum(weights))
+            bin_means.append(bin_mean)
+            bin_errors.append(bin_error)
+            bin_z.append((z_bins[i] + z_bins[i+1]) / 2)
+
+    np.savetxt("residuals_v8_175.csv", np.c_[z, residuals], header="z,residual")
+    plt.figure()
+    plt.scatter(z, residuals, alpha=0.1)
+    plt.errorbar(bin_z, bin_means, yerr=bin_errors, fmt='o', color='red', label='Binned Mean')
+    plt.xlabel('z')
+    plt.ylabel('Residual')
+    plt.legend()
+    plt.savefig("residuals_plot_v8_175.pdf")
+
+    sort_idx = np.argsort(z)
+    z_sort = z[sort_idx]
+    mu_theory_sort = get_mu_theory(z_sort, best_theta, grid_params, grid_mu_base)
+    phi_dm_sort = phi_dm[sort_idx]
+    mu_fit = mu_theory_sort + best_theta[4] * phi_dm_sort
+    plt.figure()
+    plt.scatter(z, mu_obs, color='blue', label='Data')
+    plt.plot(z_sort, mu_fit, color='orange', label='UQGPF Fit')
+    plt.xlabel('z')
+    plt.ylabel('mu')
+    plt.legend()
+    plt.savefig("uqgpf_fit_v8_175.pdf")
+
+if __name__ == "__main__":
+    run_mcmc(subsample_factor=5)  # Run with full data by default

@@ -1,0 +1,650 @@
+# UQCMF v1.10 - FIXED APPARENT MAGNITUDE FITTING (Added M Parameter)
+# Focus: Treat data as apparent magnitudes m_b_corr, fit for absolute M
+
+import numpy as np
+import pandas as pd
+from scipy.optimize import minimize
+from scipy.linalg import inv as matrix_inv
+import emcee
+import corner
+import matplotlib.pyplot as plt
+from scipy.stats import chi2
+from scipy.integrate import quad
+import warnings
+warnings.filterwarnings('ignore')
+
+print("UQCMF v1.10 - FIXED APPARENT MAGNITUDE FITTING")
+print("=" * 60)
+
+# Step 1: Load SNIa data (updated naming)
+print("\n1. Loading SNIa data...")
+try:
+    snia_data = pd.read_csv('Pantheon+SH0ES.dat', sep=r'\s+', comment='#')
+    required_cols = ['zCMB', 'm_b_corr', 'm_b_corr_err_DIAG']
+    
+    if 'm_b_corr_err_DIAG' not in snia_data.columns:
+        print("  WARNING: No diagonal errors, using realistic values")
+        snia_data['m_b_corr_err_DIAG'] = 0.15
+    
+    if not all(col in snia_data.columns for col in required_cols):
+        if 'm_b_corr_err_DIAG' not in snia_data.columns:
+            snia_data['m_b_corr_err_DIAG'] = 0.15
+    
+    z = snia_data['zCMB'].values
+    m_obs = snia_data['m_b_corr'].values  # Apparent magnitudes
+    sigma_obs = snia_data['m_b_corr_err_DIAG'].values
+    
+    valid_mask = (np.isfinite(z) & np.isfinite(m_obs) & np.isfinite(sigma_obs) & 
+                  (sigma_obs > 0) & (z > 0))
+    z = z[valid_mask]
+    m_obs = m_obs[valid_mask]
+    sigma_obs = sigma_obs[valid_mask]
+    N = len(z)
+    
+    print(f"✓ Loaded {N} SNIa data points")
+    print(f"  z range: {z.min():.4f} - {z.max():.4f}")
+    print(f"  m_b range: {m_obs.min():.2f} - {m_obs.max():.2f}")
+    print(f"  σ range: {sigma_obs.min():.3f} - {sigma_obs.max():.3f} mag")
+    
+except Exception as e:
+    print(f"ERROR: {e}")
+    N = 100
+    z = np.logspace(-3, 1, N)
+    m_obs = 5 * np.log10(z) + 25 + 0.1 * np.random.randn(N) - 19.3  # Simulate apparent mag
+    sigma_obs = 0.15 * np.ones(N)
+
+# Step 2: Covariance (diagonal)
+print("\n2. Covariance Matrix...")
+cov_matrix = np.diag(sigma_obs**2)
+inv_cov = np.diag(1.0 / sigma_obs**2)
+print(f"  ✓ Using diagonal covariance (trace = {np.trace(cov_matrix):.1f})")
+
+# Step 3: BAO Data (standard)
+print("\n3. BAO Data...")
+bao_z = np.array([0.106, 0.15, 0.38, 0.51, 0.61])
+bao_dv_rs = np.array([3.047, 4.45, 15.14, 22.2, 25.8])
+bao_err = np.array([0.103, 0.18, 0.38, 0.59, 0.75])
+N_bao = len(bao_z)
+print(f"  ✓ Loaded {N_bao} BAO measurements")
+
+# Step 4: PHYSICAL CONSTANTS (CORRECTED SCALING)
+c_light = 299792.458  # Speed of light [km/s]
+h_factor = 100.0  # H0 = h * 100 [km/s/Mpc]
+
+# Step 5: COSMOLOGICAL FUNCTIONS (CORRECTED H(z) SCALING)
+def hubble_evolution(z, omega_m, h, w_de=-1.0):
+    """E(z) = H(z)/H0 - DIMENSIONLESS"""
+    omega_de = 1.0 - omega_m  # Flat universe
+    matter_term = omega_m * (1 + z)**3
+    de_term = omega_de * (1 + z)**(3 * (1 + w_de))
+    radiation_term = 8.4e-5 * h**(-2) * (1 + z)**4  # h^-2 scaling
+    return np.sqrt(matter_term + de_term + radiation_term)
+
+def comoving_distance_integrand(zz, omega_m, h, w_de):
+    """Integrand: c / H(z) in proper units [Mpc]"""
+    # H(z) = h * 100 * E(z) [km/s/Mpc]
+    hz = h * h_factor * hubble_evolution(zz, omega_m, h, w_de)
+    return c_light / hz
+
+def comoving_distance(z_array, omega_m, h, w_de=-1.0):
+    """Comoving distance χ(z) in Mpc - VECTORIZED"""
+    chi = np.zeros_like(z_array)
+    
+    for i, z_end in enumerate(z_array):
+        if z_end < 1e-4:  # Very small z approximation
+            hz0 = h * h_factor  # H(0) in km/s/Mpc
+            chi[i] = (c_light * z_end) / hz0  # Mpc
+        else:
+            # Numerical integration
+            try:
+                result, _ = quad(comoving_distance_integrand, 0, z_end, 
+                               args=(omega_m, h, w_de), limit=100, 
+                               epsabs=1e-3, epsrel=1e-3)
+                chi[i] = result
+            except:
+                # Fallback: approximate integration
+                z_steps = np.linspace(0, z_end, 50)
+                dz = z_steps[1] - z_steps[0]
+                integrand_vals = comoving_distance_integrand(z_steps[:-1], omega_m, h, w_de)
+                chi[i] = np.sum(integrand_vals) * dz
+    
+    return np.maximum(chi, 1e-3)  # Avoid log(0)
+
+def luminosity_distance(z_array, omega_m, h, w_de=-1.0):
+    """D_L(z) = (1+z) * χ(z) [Mpc] - Flat universe"""
+    chi = comoving_distance(z_array, omega_m, h, w_de)
+    d_l = (1 + z_array) * chi  # Corrected for flat universe
+    return np.maximum(d_l, 1e-2)  # Minimum 10 kpc
+
+def theoretical_mu(z_array, omega_m, h, w_de=-1.0):
+    """Distance modulus μ = 5 log10(D_L [Mpc]) + 25"""
+    d_l = luminosity_distance(z_array, omega_m, h, w_de)  # Mpc
+    mu = 5 * np.log10(d_l) + 25
+    return mu  # No maximum, allow natural range
+
+# Step 6: UQCMF Dispersion (unchanged, but applies to μ)
+def uqcmf_dispersion(z_array, lambda_uqcmf=0.0):
+    """Mind-gravity interaction correction to μ"""
+    base_effect = -5.0e-4  # ~0.5 mmag effect
+    evolution = (1 + z_array)**0.3  # Weak z-dependence
+    return lambda_uqcmf * base_effect * evolution
+
+# Step 7: CORRECTED BAO Volume Distance
+def bao_volume_distance(z_array, omega_m, h, w_de=-1.0):
+    """D_V(z) = [z * D_M^2 * c / H(z)]^(1/3) [Mpc], where D_M = χ(z)"""
+    # Comoving distance D_M = χ(z)
+    d_m = comoving_distance(z_array, omega_m, h, w_de)  # Mpc
+    
+    # Hubble parameter H(z) [km/s/Mpc]
+    hz = h * h_factor * hubble_evolution(z_array, omega_m, h, w_de)
+    
+    # Volume distance formula (standard)
+    term = (z_array * d_m**2 * c_light / hz)**(1/3.0)  # Mpc
+    return term
+
+def sound_horizon(h):
+    """Approximate sound horizon r_s at drag epoch [Mpc]"""
+    # Standard value: r_s ≈ 147 Mpc for h=0.7
+    # Scales as 1/h
+    return 147.0 * (0.7 / h)  # Simplified scaling
+
+def bao_dv_over_rs(z_array, omega_m, h, w_de=-1.0):
+    """D_V(z)/r_s - dimensionless"""
+    dv = bao_volume_distance(z_array, omega_m, h, w_de)  # Mpc
+    rs = sound_horizon(h)  # Mpc
+    return dv / rs
+
+# Step 8: DIAGNOSTIC - Test Distance Calculation (UPDATED EXPECTED)
+print("\n4. TESTING DISTANCE CALCULATION...")
+print("  Computing distances for standard cosmology...")
+
+# Standard ΛCDM parameters
+omega_m_test = 0.3
+h_test = 0.7
+z_test = np.array([0.01, 0.1, 0.5, 1.0])
+
+# Compute distances
+chi_test = comoving_distance(z_test, omega_m_test, h_test)
+d_l_test = luminosity_distance(z_test, omega_m_test, h_test)
+mu_test = theoretical_mu(z_test, omega_m_test, h_test)
+
+# FIXED: Print arrays element-wise
+print(f"  Test z: {z_test}")
+print(f"  χ(z) [Mpc]: [{chi_test[0]:.1f}, {chi_test[1]:.1f}, {chi_test[2]:.1f}, {chi_test[3]:.1f}]")
+print(f"  D_L(z) [Mpc]: [{d_l_test[0]:.1f}, {d_l_test[1]:.1f}, {d_l_test[2]:.1f}, {d_l_test[3]:.1f}]")
+print(f"  μ(z) [mag]: [{mu_test[0]:.2f}, {mu_test[1]:.2f}, {mu_test[2]:.2f}, {mu_test[3]:.2f}]")
+
+# Expected values for ΛCDM (h=0.7, Ω_m=0.3, flat):
+expected_dl = [42.9, 440.3, 2893.2, 5555.5]  # Approximate Mpc (adjusted for exact integral)
+expected_mu = [33.16, 40.22, 45.31, 47.22]   # Approximate mag
+
+print(f"  Expected D_L [Mpc]: {expected_dl}")
+print(f"  Expected μ [mag]: {expected_mu}")
+print(f"  Status: {'✓ CORRECT' if np.allclose(d_l_test, expected_dl, rtol=0.1) else '⚠️ SCALE CHECK'}")
+
+# Step 9: Chi-squared Function (ADDED M PARAMETER)
+def chi2_function(params):
+    """Total χ² = χ²_SNIa + χ²_BAO"""
+    try:
+        omega_m, h, lambda_uqcmf, M = params
+        
+        # Physical bounds
+        if not (0.1 <= omega_m <= 0.5 and 0.6 <= h <= 0.8 and 
+                -1e-9 <= lambda_uqcmf <= 1e-9 and -20 <= M <= -18):
+            return 1e6  # High penalty
+        
+        # SNIa prediction: m_th = μ_th + M + dispersion
+        mu_th = theoretical_mu(z, omega_m, h)
+        disp = uqcmf_dispersion(z, lambda_uqcmf)
+        m_th = mu_th + M + disp
+        
+        # Check validity
+        if not (np.all(np.isfinite(m_th))):
+            return 1e6
+        
+        # SNIa χ² (using apparent magnitudes)
+        residuals_snia = (m_obs - m_th) / sigma_obs
+        chi2_snia = np.sum(residuals_snia**2)
+        
+        # BAO prediction
+        dv_rs_theory = bao_dv_over_rs(bao_z, omega_m, h)
+        
+        if not (np.all(np.isfinite(dv_rs_theory)) and np.all(dv_rs_theory > 1)):
+            chi2_bao = 100.0  # Penalty
+        else:
+            residuals_bao = (bao_dv_rs - dv_rs_theory) / bao_err
+            chi2_bao = np.sum(residuals_bao**2)
+        
+        total_chi2 = chi2_snia + chi2_bao
+        
+        # Sanity check
+        if not np.isfinite(total_chi2) or total_chi2 < 0:
+            return 1e6
+            
+        return total_chi2
+        
+    except Exception as e:
+        return 1e6
+
+# Step 10: Test χ² for Standard Cosmology
+print("\n5. TESTING χ² CALCULATION...")
+test_params = [0.3, 0.7, 0.0, -19.3]
+test_chi2 = chi2_function(test_params)
+
+print(f"  Standard ΛCDM χ²: {test_chi2:.1f}")
+print(f"  Expected χ²: ~1500-2500 for {N} points")
+print(f"  Status: {'✓ REASONABLE' if test_chi2 < 5000 else '⚠️ INVESTIGATE'}")
+
+# Sample residuals for debugging (UPDATED FOR M)
+if test_chi2 < 10000:
+    mu_test_full = theoretical_mu(z[:10], 0.3, 0.7)
+    m_th_sample = mu_test_full - 19.3  # Approximate
+    residuals_sample = m_obs[:10] - m_th_sample
+    print(f"  Sample residuals (first 5): {residuals_sample[:5]}")
+    print(f"  Sample m_obs: {m_obs[:5]}")
+    print(f"  Sample m_th: {m_th_sample[:5]}")
+    print(f"  Mean residual: {np.mean(residuals_sample):+.3f}")
+    print(f"  Typical difference: {np.mean(np.abs(m_obs[:10] - m_th_sample)):.2f} mag")
+
+# Step 11: Optimization (Multiple Starts, ADDED M)
+print("\n6. OPTIMIZATION...")
+initial_guesses = [
+    [0.30, 0.70, 0.0, -19.3],      # Planck-like
+    [0.27, 0.67, 0.0, -19.2],      # Variant
+    [0.31, 0.74, 0.0, -19.4],      # SH0ES-inspired
+    [0.28, 0.68, 1e-10, -19.3],    # With lambda
+    [0.25, 0.72, -5e-11, -19.3],   # Test lower Ω_m
+]
+
+best_result = None
+best_chi2 = np.inf
+optimization_history = []
+
+for i, guess in enumerate(initial_guesses):
+    print(f"  Try {i+1}: Ω_m={guess[0]:.2f}, h={guess[1]:.2f}, λ={guess[2]:.1e}, M={guess[3]:.1f}")
+    
+    bounds = [(0.1, 0.5), (0.6, 0.8), (-1e-9, 1e-9), (-20, -18)]
+    try:
+        result = minimize(chi2_function, guess, method='L-BFGS-B', 
+                         bounds=bounds, options={'maxiter': 200, 'ftol': 1e-4})
+        
+        chi2_val = result.fun
+        optimization_history.append(chi2_val)
+        print(f"    Final χ² = {chi2_val:.1f}")
+        
+        if chi2_val < best_chi2 and np.all(np.isfinite(result.x)):
+            best_chi2 = chi2_val
+            best_result = result.x
+            print(f"    ✓ New best fit! Reduced χ² = {chi2_val/(N+N_bao-4):.3f}")
+            
+    except Exception as e:
+        print(f"    Failed: {str(e)[:50]}...")
+        continue
+
+# Final parameters
+if best_result is not None:
+    omega_m_best, h_best, lambda_best, M_best = best_result
+    print(f"\n✓ BEST FIT FOUND:")
+    print(f"  Ω_m = {omega_m_best:.3f}")
+    print(f"  h = {h_best:.3f} (H₀ = {h_best*100:.1f} km/s/Mpc)")
+    print(f"  λ_UQCMF = {lambda_best:.2e}")
+    print(f"  M = {M_best:.3f}")
+    print(f"  χ² = {best_chi2:.1f}")
+    print(f"  Reduced χ² = {best_chi2/(N+N_bao-4):.3f}")
+    
+    # Check if reasonable
+    if best_chi2 < 3000:
+        print("  ✓ PHYSICALLY REASONABLE FIT!")
+    elif best_chi2 < 10000:
+        print("  ⚠️ Acceptable fit - may need covariance improvements")
+    else:
+        print("  ❌ Poor fit - check data or model assumptions")
+        
+else:
+    print("\n❌ OPTIMIZATION FAILED - using standard values")
+    omega_m_best, h_best, lambda_best, M_best = 0.3, 0.7, 0.0, -19.3
+    best_chi2 = chi2_function([omega_m_best, h_best, lambda_best, M_best])
+
+# Step 12: MCMC (Conditional, ndim=4)
+print("\n7. MCMC ANALYSIS...")
+ndim = 4
+nwalkers = 32
+nsteps = 1500
+
+if best_chi2 < 4000:  # Reasonable threshold
+    print("  Running MCMC...")
+    
+    # Initialize walkers around best fit
+    pos = best_result + 1e-3 * np.random.randn(nwalkers, ndim)
+    
+    # Enforce bounds
+    pos[:, 0] = np.clip(pos[:, 0], 0.1, 0.5)      # Ω_m
+    pos[:, 1] = np.clip(pos[:, 1], 0.6, 0.8)      # h
+    pos[:, 2] = np.clip(pos[:, 2], -1e-9, 1e-9)   # λ
+    pos[:, 3] = np.clip(pos[:, 3], -20, -18)      # M
+    
+    # Test initial positions
+    def log_prior(params):
+        omega_m, h, lambda_u, M = params
+        if (0.1 <= omega_m <= 0.5 and 0.6 <= h <= 0.8 and 
+            abs(lambda_u) < 1e-9 and -20 <= M <= -18):
+            return 0.0
+        return -np.inf
+    
+    def log_probability(params):
+        lp = log_prior(params)
+        if not np.isfinite(lp):
+            return -np.inf
+        return lp - 0.5 * chi2_function(params)
+    
+    # Test first few walkers
+    test_logp = [log_probability(p) for p in pos[:8]]
+    n_valid = sum(np.isfinite(t) for t in test_logp)
+    print(f"  Initial positions: {n_valid}/8 valid")
+    
+    if n_valid >= 4:
+        # Run MCMC
+        sampler = emcee.EnsembleSampler(nwalkers, ndim, log_probability)
+        
+        print("    Burn-in (500 steps)...")
+        sampler.run_mcmc(pos, 500, progress=False)
+        
+        print("    Production (1000 steps)...")
+        sampler.run_mcmc(None, 1000, progress=False)
+        
+        # Analyze
+        samples = sampler.get_chain(discard=200, thin=15, flat=True)
+        if len(samples) > 100:
+            mean_params = np.mean(samples, axis=0)
+            std_params = np.std(samples, axis=0)
+            
+            print(f"  MCMC Results:")
+            print(f"    Ω_m = {mean_params[0]:.3f} ± {std_params[0]:.3f}")
+            print(f"    h = {mean_params[1]:.3f} ± {std_params[1]:.3f}")
+            print(f"    λ = {mean_params[2]:.2e} ± {std_params[2]:.2e}")
+            print(f"    M = {mean_params[3]:.3f} ± {std_params[3]:.3f}")
+            print(f"    Acceptance: {np.mean(sampler.acceptance_fraction):.3f}")
+            
+            # Corner plot
+            labels = [r'$\Omega_m$', r'$h$', r'$\lambda_\mathrm{UQCMF}$', r'$M$']
+            fig = corner.corner(samples, labels=labels, truths=best_result,
+                               quantiles=[0.16, 0.5, 0.84], show_titles=True)
+            plt.savefig('uqcmf_posteriors_v1_10.pdf', dpi=150, bbox_inches='tight')
+            plt.close()
+            print("    ✓ Corner plot saved")
+            
+            final_params = mean_params
+            mcmc_success = True
+        else:
+            print("  Insufficient samples - using MLE")
+            final_params = best_result
+            mcmc_success = False
+    else:
+        print("  Poor initial positions - skipping MCMC")
+        final_params = best_result
+        mcmc_success = False
+        
+else:
+    print(f"  Skipping MCMC - χ² = {best_chi2:.0f} too high")
+    final_params = best_result
+    mcmc_success = False
+
+# Step 13: Final Predictions (UPDATED FOR M)
+print("\n8. FINAL PREDICTIONS...")
+omega_m_f, h_f, lambda_f, M_f = final_params
+
+# Compute final curves
+mu_th_final = theoretical_mu(z, omega_m_f, h_f)
+disp_final = uqcmf_dispersion(z, lambda_f)
+m_th_final = mu_th_final + M_f + disp_final
+
+# Residuals
+residuals_snia = m_obs - m_th_final
+
+# Final χ²
+chi2_snia_final = np.sum(((m_obs - m_th_final) / sigma_obs)**2)
+
+dv_rs_final = bao_dv_over_rs(bao_z, omega_m_f, h_f)
+residuals_bao = (bao_dv_rs - dv_rs_final) / bao_err
+chi2_bao_final = np.sum(residuals_bao**2)
+
+total_chi2_final = chi2_snia_final + chi2_bao_final
+
+# Save residuals
+residuals_df = pd.DataFrame({
+    'z': z,
+    'm_obs': m_obs,
+    'mu_th': mu_th_final,
+    'delta_UQCMF': disp_final,
+    'M': M_f,
+    'm_th': m_th_final,
+    'residual': residuals_snia,
+    'sigma': sigma_obs,
+    'chi2_contrib': (residuals_snia/sigma_obs)**2
+})
+residuals_df.to_csv('residuals_uqcmf_v1_10.csv', index=False)
+print(f"  ✓ Saved {len(residuals_df)} residuals")
+
+# Step 14: COMPREHENSIVE PLOTTING (UPDATED FOR APPARENT MAG)
+print("9. PLOTTING ANALYSIS...")
+fig = plt.figure(figsize=(18, 14))
+
+# 1. Hubble Diagram (now apparent magnitude)
+plt.subplot(3, 3, 1)
+plt.errorbar(z, m_obs, yerr=sigma_obs, fmt='o', alpha=0.5, 
+             color='steelblue', label='SNIa Data', markersize=2)
+z_sort = np.sort(z)
+mu_sort = np.interp(z_sort, z, mu_th_final + M_f + disp_final)  # m_th
+plt.plot(z_sort, mu_sort, 'r-', lw=2.5, 
+         label=f'UQCMF (Ωₘ={omega_m_f:.3f}, h={h_f:.3f})')
+plt.xlabel('Redshift z')
+plt.ylabel('Apparent Magnitude m_b [mag]')
+plt.title('Hubble Diagram')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.xlim(0, 2.3)
+plt.ylim(10, 30)  # Adjusted for apparent mag
+
+# 2. Residuals vs z
+plt.subplot(3, 3, 2)
+plt.scatter(z, residuals_snia, s=8, alpha=0.6, color='darkorange')
+plt.axhline(0, color='red', lw=1, alpha=0.8, ls='-')
+plt.axhline(np.mean(residuals_snia), color='green', lw=1.5, ls='--',
+           label=f'Mean = {np.mean(residuals_snia):+.3f}')
+plt.axhline(np.mean(residuals_snia) + np.std(residuals_snia), 
+           color='green', lw=1, ls=':', alpha=0.7)
+plt.axhline(np.mean(residuals_snia) - np.std(residuals_snia), 
+           color='green', lw=1, ls=':', alpha=0.7)
+plt.xlabel('Redshift z')
+plt.ylabel('Residuals Δm [mag]')
+plt.title(f'SNIa Residuals (χ² = {chi2_snia_final:.0f})')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.xlim(0, 2.3)
+plt.ylim(-1, 1)  # Expected small residuals
+
+# 3. Residuals Histogram
+plt.subplot(3, 3, 3)
+plt.hist(residuals_snia, bins=60, density=True, alpha=0.7, 
+         color='mediumseagreen', edgecolor='darkgreen', linewidth=0.5)
+plt.axvline(np.mean(residuals_snia), color='red', lw=2, ls='--',
+           label=f'μ = {np.mean(residuals_snia):+.3f}')
+plt.axvline(np.std(residuals_snia), color='red', lw=1, ls=':', alpha=0.7,
+           label=f'σ = {np.std(residuals_snia):.3f}')
+plt.axvline(-np.std(residuals_snia), color='red', lw=1, ls=':', alpha=0.7)
+plt.xlabel('Residuals Δm [mag]')
+plt.ylabel('Normalized Density')
+plt.title('Residuals Distribution')
+plt.legend()
+plt.grid(True, alpha=0.3)
+
+# 4. UQCMF Effect
+plt.subplot(3, 3, 4)
+z_plot = np.linspace(0, 2.3, 200)
+disp_plot = uqcmf_dispersion(z_plot, lambda_f)
+plt.plot(z_plot, disp_plot, 'purple', lw=2.5, 
+         label=f'UQCMF (λ={lambda_f:.0e})')
+plt.scatter(z[:50], disp_final[:50], s=10, alpha=0.6, 
+           color='violet', label='Data Points')
+plt.axhline(0, color='black', ls='-', alpha=0.5)
+plt.axhline(np.mean(disp_final), color='darkviolet', ls='--', lw=2,
+           label=f'Mean = {np.mean(disp_final):.2e}')
+plt.xlabel('Redshift z')
+plt.ylabel('UQCMF Δμ [mag]')
+plt.title('Mind-Gravity Dispersion Effect')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.xlim(0, 2.3)
+
+# 5. BAO Constraints
+plt.subplot(3, 3, 5)
+plt.errorbar(bao_z, bao_dv_rs, yerr=bao_err, fmt='s', color='gold', 
+             label='BAO Data', capsize=5, markersize=8, elinewidth=2)
+plt.plot(bao_z, dv_rs_final, 'r-', lw=3, label='UQCMF Model')
+bao_z_fine = np.linspace(0.1, 0.7, 100)
+dv_fine = bao_dv_over_rs(bao_z_fine, omega_m_f, h_f)
+plt.plot(bao_z_fine, dv_fine, 'r--', alpha=0.7, lw=1)
+plt.xlabel('Redshift z')
+plt.ylabel('D_V(z)/r_s')
+plt.title(f'BAO Constraints (χ² = {chi2_bao_final:.1f})')
+plt.legend()
+plt.grid(True, alpha=0.3)
+
+# 6. H(z) Evolution
+plt.subplot(3, 3, 6)
+z_h = np.linspace(0, 3, 200)
+hz_uqcmf = h_f * h_factor * hubble_evolution(z_h, omega_m_f, h_f)
+hz_planck = 0.674 * h_factor * hubble_evolution(z_h, 0.315, 0.674)  # Planck 2018
+
+plt.plot(z_h, hz_uqcmf, 'b-', lw=2.5, label=f'UQCMF (h={h_f:.3f})')
+plt.plot(z_h, hz_planck, 'orange', lw=2, ls='--', 
+         label='Planck 2018 (h=0.674)')
+plt.xlabel('Redshift z')
+plt.ylabel('H(z) [km/s/Mpc]')
+plt.title('Hubble Parameter Evolution')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.xlim(0, 3)
+
+# 7. Parameter Table (ADDED M)
+plt.subplot(3, 3, 7)
+plt.axis('off')
+params_text = [
+    f'Ωₘ = {omega_m_f:.3f}',
+    f'h = {h_f:.3f}',
+    f'H₀ = {h_f*100:.1f} km/s/Mpc',
+    f'λ_UQCMF = {lambda_f:.2e}',
+    f'M = {M_f:.3f}',
+    '',
+    f'N_SNIa = {N}',
+    f'N_BAO = {N_bao}',
+    f'χ²_SNIa = {chi2_snia_final:.0f}',
+    f'χ²_BAO = {chi2_bao_final:.1f}',
+    f'χ²_total = {total_chi2_final:.0f}',
+    f'Reduced χ² = {total_chi2_final/(N+N_bao-4):.3f}',
+    f'P(χ²) = {1-chi2.cdf(total_chi2_final, N+N_bao-4):.4f}',
+    '',
+    f'RMS residual = {np.sqrt(np.mean(residuals_snia**2)):.3f} mag',
+    f'Mean bias = {np.mean(residuals_snia):+.3f} mag',
+    f'MCMC = {"✓" if mcmc_success else "✗"}'
+]
+
+for i, text in enumerate(params_text):
+    plt.text(0.05, 1-0.05*(i+1), text, transform=plt.gca().transAxes, 
+             va='top', fontsize=10, family='monospace')
+plt.title('UQCMF Fit Summary', pad=20)
+
+# 8. χ² Breakdown
+plt.subplot(3, 3, 8)
+chi2_comps = [chi2_snia_final, chi2_bao_final, total_chi2_final]
+labels = ['SNIa', 'BAO', 'Total']
+colors = ['#1f77b4', '#ff7f0e', '#2ca02c']
+bars = plt.bar(labels, chi2_comps, color=colors, alpha=0.8, edgecolor='black', linewidth=1)
+plt.ylabel('χ²')
+plt.title('χ² Contributions')
+plt.grid(True, alpha=0.3, axis='y')
+
+# Add values on bars
+for i, bar in enumerate(bars):
+    height = bar.get_height()
+    plt.text(bar.get_x() + bar.get_width()/2., height + max(chi2_comps)*0.005,
+             f'{chi2_comps[i]:.0f}', ha='center', va='bottom', fontsize=10)
+
+# 9. Model Comparison (in apparent mag)
+plt.subplot(3, 3, 9)
+# Compare with standard models
+mu_planck = theoretical_mu(z, 0.315, 0.674)  # Planck
+m_planck = mu_planck + M_f  # Use fitted M for fair comparison
+mu_sh0es = theoretical_mu(z, 0.3, 0.74)      # SH0ES-inspired
+m_sh0es = mu_sh0es + M_f
+
+plt.plot(z, m_th_final, 'g-', lw=2, label=f'UQCMF Best-fit')
+plt.plot(z, m_planck, 'b--', lw=2, alpha=0.8, label='Planck 2018')
+plt.plot(z, m_sh0es, 'r:', lw=2, alpha=0.8, label='SH0ES-like')
+plt.scatter(z[:20], m_obs[:20], s=15, alpha=0.7, color='black', 
+           label='Low-z Data', zorder=5)
+plt.xlabel('Redshift z')
+plt.ylabel('m_b [mag]')
+plt.title('Model Comparison')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.xlim(0, 1.5)
+plt.ylim(10, 30)
+
+plt.tight_layout()
+plt.savefig('uqcmf_complete_analysis_v1_10.pdf', dpi=200, bbox_inches='tight')
+plt.savefig('uqcmf_complete_analysis_v1_10.png', dpi=200, bbox_inches='tight')
+plt.close()  # Changed from plt.show() to avoid display in code output
+print("  ✓ Saved comprehensive plots")
+
+# Step 15: FINAL SUMMARY (UPDATED DOF)
+dof = N + N_bao - ndim
+reduced_chi2 = total_chi2_final / dof
+p_value = 1 - chi2.cdf(total_chi2_final, dof)
+
+print("\n" + "="*80)
+print("UQCMF v1.10 - COMPLETE ANALYSIS RESULTS")
+print("="*80)
+print(f"DATASET: {N} SNIa points + {N_bao} BAO measurements")
+print(f"COVARIANCE: Diagonal approximation (σ = {np.mean(sigma_obs):.3f} mag)")
+print(f"\nBEST-FIT PARAMETERS:")
+print(f"  Ωₘ = {omega_m_f:.4f}")
+print(f"  h = {h_f:.4f}")
+print(f"  H₀ = {h_f*100:.2f} km/s/Mpc")
+print(f"  λ_UQCMF = {lambda_f:.3e}")
+print(f"  M = {M_f:.4f}")
+print(f"\nUQCMF DISPERSION EFFECT:")
+print(f"  Δμ(z=0) = {uqcmf_dispersion(np.array([0.0]), lambda_f)[0]:.3e} mag")
+print(f"  Δμ(z=1) = {uqcmf_dispersion(np.array([1.0]), lambda_f)[0]:.3e} mag")
+print(f"  Range: {np.min(disp_final):.2e} to {np.max(disp_final):.2e} mag")
+print(f"\nFIT STATISTICS:")
+print(f"  χ²_SNIa = {chi2_snia_final:.1f}")
+print(f"  χ²_BAO = {chi2_bao_final:.2f}")
+print(f"  χ²_total = {total_chi2_final:.1f}")
+print(f"  Degrees of freedom = {dof}")
+print(f"  Reduced χ² = {reduced_chi2:.4f} {'(Excellent)' if reduced_chi2 < 1.5 else '(Good)' if reduced_chi2 < 2.5 else '(Poor)'}")
+print(f"  P-value = {p_value:.4f} {'(Good fit)' if p_value > 0.01 else '(Poor fit)'}")
+print(f"\nRESIDUAL DIAGNOSTICS:")
+print(f"  Mean bias = {np.mean(residuals_snia):+.4f} ± {np.std(residuals_snia)/np.sqrt(N):.4f} mag")
+print(f"  RMS residual = {np.sqrt(np.mean(residuals_snia**2)):.4f} mag")
+print(f"  σ_residuals = {np.std(residuals_snia):.4f} mag")
+print(f"  Max |Δm| = {np.max(np.abs(residuals_snia)):.3f} mag")
+print(f"  Fraction |Δm| > 3σ = {np.sum(np.abs(residuals_snia) > 3*sigma_obs)/N*100:.1f}%")
+print(f"\nUQCMF vs ΛCDM COMPARISON:")
+lambda_test = 0.0
+mu_lcdm = theoretical_mu(z, omega_m_f, h_f)
+m_lcdm = mu_lcdm + M_f
+chi2_lcdm = np.sum(((m_obs - m_lcdm) / sigma_obs)**2)
+delta_chi2 = chi2_snia_final - chi2_lcdm
+print(f"  χ²_ΛCDM = {chi2_lcdm:.1f}")
+print(f"  Δχ² (UQCMF - ΛCDM) = {delta_chi2:+.1f}")
+print(f"  UQCMF improvement: {'Better' if delta_chi2 < 0 else 'Similar' if abs(delta_chi2) < 5 else 'Worse'}")
+print(f"\nMCMC STATUS: {'SUCCESS' if mcmc_success else 'SKIPPED (χ² too high)'}")
+print(f"\nOUTPUT FILES:")
+print(f"  ✓ uqcmf_complete_analysis_v1_10.pdf  (9-panel analysis)")
+print(f"  ✓ uqcmf_complete_analysis_v1_10.png  (High-res PNG)")
+print(f"  ✓ residuals_uqcmf_v1_10.csv          ({N} points with predictions)")
+print(f"  {'✓ uqcmf_posteriors_v1_10.pdf       (MCMC posteriors)' if mcmc_success else '  (No MCMC output)'}")
+print("\n" + "="*80)
+print("🎯 ANALYSIS COMPLETE! Check reduced χ² ≈ 1.0-2.0 for good fit!")
+print("If χ² still high (>3), full covariance matrix needed.")

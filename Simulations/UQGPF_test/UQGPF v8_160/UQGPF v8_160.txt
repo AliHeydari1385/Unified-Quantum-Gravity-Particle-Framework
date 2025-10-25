@@ -1,0 +1,413 @@
+# UQGPF v8.160: Unified Quasi-Geometric Power-Law Fitting for Cosmology
+# Key Updates from v8.159:
+# - Integrated SNIa residual computation and plotting directly after MCMC, using binned approach from user's code.
+# - Added binning of z values based on sorted SNIa data, splitting into N_bins derived from precomputed grid (if available) or user-defined.
+# - Computed binned observed MU with weighted averaging, then residuals against interpolated/best-fit theory MU.
+# - Saved binned residuals to CSV and generated a residuals plot saved as 'residuals_plot_v8_160.pdf'.
+# - Enhanced error handling for binning: If a bin has no data, skip or fill with NaN.
+# - Minor: Updated file names to v8_160, added more logging for binning process.
+# - No changes to core MCMC or grid computation, but ensured compatibility with Pantheon+SH0ES data loading.
+!pip install camb emcee corner getdist tqdm h5py numpy scipy matplotlib pandas joblib -q
+import os
+import time
+import warnings
+import numpy as np
+import pandas as pd
+import emcee
+import corner
+import matplotlib.pyplot as plt
+from scipy.interpolate import interp1d
+from scipy.integrate import trapezoid as trapz
+import camb
+from camb import model
+from tqdm import tqdm
+
+# Constants and Configuration
+OM_GRID = np.linspace(0.05, 0.5, 8)
+H_GRID = np.linspace(0.4, 1.1, 8)
+GAMMA_GRID = np.linspace(1.5, 5.5, 8)
+GRID_SIZE = len(OM_GRID) * len(H_GRID) * len(GAMMA_GRID)
+
+# File Paths
+SNIA_DATA_FILE = 'Pantheon+SH0ES.dat'
+SNIA_COV_FILE = 'Pantheon+SH0ES_STAT+SYS.cov'
+CMB_CL_FILE = 'ACT+SPT_cl.dat'
+CMB_COV_FILE = 'ACT+SPT_cov.dat'
+GRID_FILE = 'camb_grid_v8_160.npz'
+MCMC_BACKEND_FILE = 'mcmc_backend_v8_160.h5'
+POSTERIORS_FILE = 'uqgpf_posteriors_v8_160.pdf'
+FIT_FILE = 'uqgpf_fit_v8_160.pdf'
+RESIDUALS_FILE = 'residuals_v8_160.csv'
+RESIDUALS_PLOT_FILE = 'residuals_plot_v8_160.pdf'
+LATEX_TABLE_FILE = 'latex_table_v8_160.tex'
+REJECTION_LOG = 'rejection_reasons_v8_160.txt'
+
+# CAMB Parameters
+NS = 0.965
+AS = 2.1e-9
+OM_B = 0.05
+TAU = 0.06
+LMAX = 3500
+INITIAL_ACCURACY = 1.2
+ACCURACY_DEC = 0.1
+MIN_ACCURACY = 0.5
+INITIAL_L_ACCURACY = 1.0
+L_ACCURACY_DEC = 0.1
+MIN_L_ACCURACY = 0.5
+MAX_RETRIES = 15
+TIMEOUT_SEC = 7200  # 2 hours per point
+OMCH2_MIN = 0.001  # Stricter minimum omch2
+
+# Load SNIa Data with Robustness
+def load_snia_data():
+    try:
+        snia_df = pd.read_csv(SNIA_DATA_FILE, sep=r'\s+', on_bad_lines='skip')
+    except TypeError:
+        snia_df = pd.read_csv(SNIA_DATA_FILE, sep=r'\s+', error_bad_lines=False, warn_bad_lines=False)
+    
+    # Rename columns for consistency
+    if 'zHD' in snia_df.columns:
+        snia_df = snia_df.rename(columns={'zHD': 'z', 'm_b_corr': 'MU', 'm_b_corr_err_DIAG': 'MU_ERR'})
+    elif 'zCMB' in snia_df.columns:
+        snia_df = snia_df.rename(columns={'zCMB': 'z', 'm_b_corr': 'MU', 'm_b_corr_err_DIAG': 'MU_ERR'})
+    
+    # Add placeholder CEPHEID_ERR if missing (for weighting)
+    if 'CEPHEID_ERR' not in snia_df.columns:
+        snia_df['CEPHEID_ERR'] = snia_df['MU_ERR']
+    
+    snia_df = snia_df.sort_values('z')
+    return snia_df
+
+# Handle Duplicate SNIa Points with Weighted Averaging
+def weighted_avg_group(g):
+    z = g.name  # Group key is z
+    weights = 1 / g['CEPHEID_ERR']**2
+    mu_avg = np.average(g['MU'], weights=weights)
+    sigma_avg = np.sqrt(1 / np.sum(weights))
+    return pd.Series({'z': z, 'MU': mu_avg, 'MU_ERR': sigma_avg})
+
+def process_duplicates(snia_df):
+    duplicates = snia_df[snia_df.duplicated('z', keep=False)]
+    if not duplicates.empty:
+        grouped = duplicates.groupby('z').apply(weighted_avg_group, include_groups=False).reset_index(drop=True)
+    else:
+        grouped = pd.DataFrame()
+    
+    unique_snia = pd.concat([snia_df[~snia_df['z'].duplicated(keep=False)], grouped])
+    unique_snia = unique_snia.sort_values('z').reset_index(drop=True)
+    return unique_snia
+
+# Load SNIa Covariance (Diagonal for Simplicity Post-Averaging)
+def load_snia_cov(snia_df):
+    cov_size = len(snia_df)
+    return np.diag(snia_df['MU_ERR']**2)
+
+# Load CMB Data Robustly
+def load_cmb_data():
+    cmb_cl_data = np.genfromtxt(CMB_CL_FILE, invalid_raise=False)
+    cmb_ell = cmb_cl_data[:, 0].astype(int)
+    cmb_cl_obs = cmb_cl_data[:, 1]
+    
+    # Robust covariance loading
+    cov_values = []
+    with open(CMB_COV_FILE, 'r') as f:
+        for line in f:
+            parts = line.split()
+            cov_values.extend([float(p) for p in parts if p.replace('.', '', 1).replace('-', '', 1).replace('e', '', 1).replace('E', '', 1).isdigit()])
+    
+    n = len(cmb_ell)
+    if len(cov_values) == n * n:
+        cmb_cov = np.array(cov_values).reshape(n, n)
+    else:
+        # Fallback to diagonal
+        print(f"Warning: Covariance size {len(cov_values)} not square for n={n}. Using diagonal approximation.")
+        cmb_cov = np.diag(cmb_cl_data[:, 2]**2)
+    
+    inv_cov = np.linalg.inv(cmb_cov)
+    return cmb_ell, cmb_cl_obs, inv_cov, cmb_cov
+
+# Compute single grid point with enhanced error handling
+def compute_point(om, h, gamma, cmb_ell):
+    start_time = time.time()
+    print(f"Starting computation for om={om:.3f}, h={h:.3f}, gamma={gamma:.3f}")
+    
+    # Calculate w
+    try:
+        w = (gamma / 3 - 1) / (gamma / 2 - 1) - 1
+    except ZeroDivisionError:
+        print(f"Division by zero for gamma={gamma}. Skipping.")
+        return None
+    print(f"Computed w = {w:.4f}")
+    
+    # Enhanced w nudge for stability
+    if w > -0.05 or w >= 0:
+        w = -0.05
+        print(f"Nudged w to {w:.4f} for stability")
+    
+    # Check for unphysical omch2
+    omch2 = (om - OM_B) * h**2
+    print(f"Computed omch2 = {omch2:.4f}")
+    if omch2 <= OMCH2_MIN:
+        reason = f"unphysical low CDM (omch2={omch2:.4f} <= {OMCH2_MIN})"
+        print(f"Rejecting point: {reason}")
+        with open(REJECTION_LOG, 'a') as f:
+            f.write(f"Rejected point: om={om}, h={h}, gamma={gamma}, reason={reason}\n")
+        return None
+    
+    pars = camb.CAMBparams()
+    pars.set_cosmology(H0=h*100, ombh2=OM_B * h**2, omch2=omch2, tau=TAU)
+    pars.InitPower.set_params(As=AS, ns=NS)
+    pars.set_dark_energy(w=w, wa=0, dark_energy_model='ppf')
+    pars.NonLinear = model.NonLinear_lens  # Non-linear for lensing only
+    pars.NonLinearModel.set_params(halofit_version='takahashi')  # Use faster Takahashi halofit
+    pars.set_accuracy(AccuracyBoost=INITIAL_ACCURACY, lAccuracyBoost=INITIAL_L_ACCURACY)
+    pars.set_for_lmax(LMAX, lens_potential_accuracy=1)
+    print("CAMB parameters set")
+    
+    retries = 0
+    last_error = None
+    while retries < MAX_RETRIES:
+        try:
+            print(f"Retry {retries}: Calling camb.get_results...")
+            results = camb.get_results(pars)
+            print(f"Retry {retries}: CAMB results obtained")
+            print(f"Retry {retries}: Calling get_total_cls...")
+            cls = results.get_total_cls(LMAX + 1)
+            print(f"Retry {retries}: Total Cls computed")
+            # Check for NaN in cls
+            if np.any(np.isnan(cls)):
+                reason = "NaN detected in computed cls"
+                print(f"Rejecting point: {reason}")
+                with open(REJECTION_LOG, 'a') as f:
+                    f.write(f"Rejected point: om={om}, h={h}, gamma={gamma}, reason={reason}\n")
+                return None
+            return cls
+        except Exception as e:
+            last_error = str(e)
+            print(f"Error in compute_point (retry {retries+1}): {e}")
+            retries += 1
+            new_accuracy = max(MIN_ACCURACY, INITIAL_ACCURACY - retries * ACCURACY_DEC)
+            new_l_accuracy = max(MIN_L_ACCURACY, INITIAL_L_ACCURACY - (retries // 2) * L_ACCURACY_DEC)  # Decrease slower
+            pars.set_accuracy(AccuracyBoost=new_accuracy, lAccuracyBoost=new_l_accuracy)
+            if time.time() - start_time > TIMEOUT_SEC:
+                print("Timeout reached")
+                with open(REJECTION_LOG, 'a') as f:
+                    f.write(f"Timeout for om={om}, h={h}, gamma={gamma}: {last_error}\n")
+                return None
+    with open(REJECTION_LOG, 'a') as f:
+        f.write(f"Rejected point: om={om}, h={h}, gamma={gamma}, reason=Max retries exceeded, last error={last_error}\n")
+    return None
+
+# Precompute CAMB Grid sequentially
+def precompute_camb_grid(cmb_ell):
+    points = [(om, h, gamma) for om in OM_GRID for h in H_GRID for gamma in GAMMA_GRID]
+    grid_om, grid_h, grid_gamma, grid_cls = [], [], [], []
+    
+    for om, h, gamma in tqdm(points):
+        cls = compute_point(om, h, gamma, cmb_ell)
+        if cls is not None:
+            grid_om.append(om)
+            grid_h.append(h)
+            grid_gamma.append(gamma)
+            grid_cls.append(cls)
+    
+    np.savez(GRID_FILE, om=grid_om, h=grid_h, gamma=grid_gamma, cls=grid_cls)
+
+# Interpolation Function for CMB Cl
+def get_interpolated_cl(om, h, gamma, cmb_ell):
+    # Load grid
+    grid_data = np.load(GRID_FILE)
+    grid_om = grid_data['om']
+    grid_h = grid_data['h']
+    grid_gamma = grid_data['gamma']
+    grid_cls = grid_data['cls']
+    
+    # Check if grid is empty
+    if len(grid_om) == 0:
+        print("Warning: Precomputed grid is empty. Returning NaN array.")
+        return np.full(len(cmb_ell), np.nan)
+    
+    # Find nearest grid point (simple for now; can use proper interpolation later)
+    idx = np.argmin((grid_om - om)**2 + (grid_h - h)**2 + (grid_gamma - gamma)**2)
+    cls = grid_cls[idx]
+    
+    theory_ell = np.arange(cls.shape[0])
+    cl_tt = cls[:, 0]  # TT spectrum
+    cl_interp = np.interp(cmb_ell, theory_ell, cl_tt)
+    return cl_interp
+
+# Log Likelihood Function
+def log_likelihood(theta, unique_snia, snia_inv_cov, cmb_ell, cmb_cl_obs, cmb_inv_cov):
+    om, h, gamma, beta, alpha, M_calib, scale_factor = theta
+    
+    # SNIa part
+    z = unique_snia['z'].values
+    mu_obs = unique_snia['MU'].values
+    arg = (1 + z)**gamma * h / om
+    if np.any(arg <= 0):
+        return -np.inf  # Prevent log of non-positive
+    mu_theory = 5 * np.log10(arg) + 25 + M_calib
+    residuals = mu_obs - mu_theory
+    chi2_snia = residuals @ snia_inv_cov @ residuals
+    
+    # CMB part
+    cl_theory = get_interpolated_cl(om, h, gamma, cmb_ell)
+    if np.any(np.isnan(cl_theory)):
+        # Log for debugging
+        with open(REJECTION_LOG, 'a') as f:
+            f.write(f"NaN in cl_theory during likelihood for theta={theta}\n")
+        return -np.inf  # Prevent NaN in chi2
+    cl_res = cmb_cl_obs - cl_theory * scale_factor
+    chi2_cmb = cl_res @ cmb_inv_cov @ cl_res
+    
+    return -0.5 * (chi2_snia + chi2_cmb)
+
+# Log Prior Function
+def log_prior(theta):
+    om, h, gamma, beta, alpha, M_calib, scale_factor = theta
+    if (0.05 < om < 0.5 and 0.4 < h < 1.1 and 1.5 < gamma < 5.5 and
+        -1 < beta < 1 and -1 < alpha < 1 and -20 < M_calib < -18 and
+        0.5 < scale_factor < 2.0):
+        return 0.0
+    return -np.inf
+
+# Log Posterior
+def log_posterior(theta, *args):
+    lp = log_prior(theta)
+    if not np.isfinite(lp):
+        return -np.inf
+    ll = log_likelihood(theta, *args)
+    if not np.isfinite(ll):
+        return -np.inf
+    return lp + ll
+
+# Function to compute binned residuals (integrated from user's code)
+def compute_binned_residuals(unique_snia, best_theta, grid_file=GRID_FILE):
+    om, h, gamma, beta, alpha, M_calib, scale_factor = best_theta
+    
+    # Load grid to get N_bins (assuming grid_mu shape[1] is N_bins; adjust if needed)
+    if os.path.exists(grid_file):
+        grid_data = np.load(grid_file)
+        if 'grid_mu' in grid_data:
+            N_bins = grid_data['grid_mu'].shape[1]
+        else:
+            N_bins = 248  # Default from user's code
+    else:
+        N_bins = 248  # Fallback
+    
+    print(f"Using N_bins = {N_bins} for z binning.")
+    
+    # Generate z bins from sorted full data
+    z_all_sorted = np.sort(unique_snia['z'].values)
+    z_bins_generated = [np.mean(chunk) for chunk in np.array_split(z_all_sorted, N_bins)]
+    grid_z_bins = np.array(z_bins_generated)
+    
+    # Compute observed MU for each bin
+    obs_mu_bins = []
+    obs_err_bins = []
+    for i, z_target in enumerate(grid_z_bins):
+        dz = np.abs(unique_snia['z'] - z_target)
+        mask = dz <= 0.002  # User's tolerance
+        sel = unique_snia[mask]
+        if len(sel) == 0:
+            obs_mu_bins.append(np.nan)
+            obs_err_bins.append(np.nan)
+            print(f"Warning: Bin {i} at z={z_target:.4f} has no data points.")
+        else:
+            w = 1 / sel['MU_ERR']**2
+            mu_avg = np.average(sel['MU'], weights=w)
+            mu_err = np.sqrt(1.0 / w.sum())
+            obs_mu_bins.append(mu_avg)
+            obs_err_bins.append(mu_err)
+    
+    obs_mu_bins = np.array(obs_mu_bins)
+    obs_err_bins = np.array(obs_err_bins)
+    
+    # Compute theory MU at bin centers (using UQGPF formula)
+    arg = (1 + grid_z_bins)**gamma * h / om
+    mu_theory_best = 5 * np.log10(arg) + 25 + M_calib  # Simplified; integrate with grid if needed
+    
+    # Residuals
+    residuals = obs_mu_bins - mu_theory_best
+    
+    # Save to CSV
+    pd.DataFrame({
+        'z_bin': grid_z_bins,
+        'MU_obs_bin': obs_mu_bins,
+        'MU_err_bin': obs_err_bins,
+        'MU_theory_bestfit': mu_theory_best,
+        'Residual': residuals
+    }).to_csv(RESIDUALS_FILE, index=False)
+    print(f"Saved binned residuals to {RESIDUALS_FILE}")
+    
+    # Plot residuals
+    plt.figure(figsize=(10, 6))
+    plt.errorbar(grid_z_bins, residuals, yerr=obs_err_bins,
+                 fmt='o', markersize=5, color='blue', alpha=0.7)
+    plt.axhline(0, color='black', linestyle='--')
+    plt.xlabel("Redshift z")
+    plt.ylabel("SNIa Residuals (mag)")
+    plt.title("Pantheon+SH0ES Binned Residuals - Best Fit")
+    plt.grid(True)
+    plt.savefig(RESIDUALS_PLOT_FILE)
+    plt.close()
+    print(f"Saved residuals plot to {RESIDUALS_PLOT_FILE}")
+
+# Main Execution
+if __name__ == "__main__":
+    # Load Data
+    snia_df = load_snia_data()
+    unique_snia = process_duplicates(snia_df)
+    snia_cov = load_snia_cov(unique_snia)
+    snia_inv_cov = np.linalg.inv(snia_cov)
+    cmb_ell, cmb_cl_obs, cmb_inv_cov, cmb_cov = load_cmb_data()
+    
+    # Precompute Grid if needed
+    if not os.path.exists(GRID_FILE):
+        open(REJECTION_LOG, 'w').close()  # Clear log
+        precompute_camb_grid(cmb_ell)
+    
+    # MCMC Setup
+    nwalkers = 32
+    ndim = 7  # om, h, gamma, beta, alpha, M_calib, scale_factor
+    initial = np.array([0.3, 0.7, 3.0, 0.0, 0.0, -19.0, 1.0]) + 1e-4 * np.random.randn(nwalkers, ndim)
+    backend = emcee.backends.HDFBackend(MCMC_BACKEND_FILE)
+    sampler = emcee.EnsembleSampler(nwalkers, ndim, log_posterior, args=(unique_snia, snia_inv_cov, cmb_ell, cmb_cl_obs, cmb_inv_cov), backend=backend)
+    
+    # Run MCMC
+    sampler.run_mcmc(initial, 5000, progress=True)
+    
+    # Diagnostics and Plotting
+    samples = sampler.get_chain(discard=1000, thin=15, flat=True)
+    labels = ["Omega_m", "h", "gamma", "beta", "alpha", "M_calib", "scale_factor"]
+    fig = corner.corner(samples, labels=labels)
+    fig.savefig(POSTERIORS_FILE)
+    
+    # Best-fit parameters (median)
+    best_theta = np.median(samples, axis=0)
+    
+    # Compute and plot binned residuals
+    compute_binned_residuals(unique_snia, best_theta)
+    
+    # Compute best-fit model for SNIa (point-wise for fit plot)
+    z = unique_snia['z'].values
+    mu_obs = unique_snia['MU'].values
+    mu_theory = 5 * np.log10((1 + z)**best_theta[2] * best_theta[1] / best_theta[0]) + 25 + best_theta[5]
+    residuals = mu_obs - mu_theory
+    pd.DataFrame({'z': z, 'residual': residuals}).to_csv(RESIDUALS_FILE.replace('.csv', '_pointwise.csv'), index=False)
+    
+    # Fit Plot
+    plt.figure()
+    plt.errorbar(z, mu_obs, yerr=unique_snia['MU_ERR'], fmt='o', label='Data')
+    plt.plot(z, mu_theory, label='UQGPF Fit')
+    plt.legend()
+    plt.savefig(FIT_FILE)
+    
+    # Generate LaTeX Table (example)
+    with open(LATEX_TABLE_FILE, 'w') as f:
+        f.write("\\begin{table}\n")
+        for i, label in enumerate(labels):
+            f.write(f"{label} & {best_theta[i]:.3f} \\\\\n")
+        f.write("\\end{table}\n")
+    
+    print("Analysis complete.")

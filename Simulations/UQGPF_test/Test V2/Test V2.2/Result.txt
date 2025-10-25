@@ -1,0 +1,17 @@
+Uploaded files saved successfully.
+Extracted actlite_3yr_v2p2.zip to 'act_data'
+Extracted Reference.zip to 'ref_data'
+Loaded 89 CMB Cl points.
+Loaded covariance matrix with 7921 elements (reshaping to 89x89)
+Covariance matrix condition number: 1.76e+16
+Using pseudo-inverse for covariance inversion to ensure numerical stability.
+Loaded 1701 valid SNIa points.
+100%|██████████| 15000/15000 [03:22<00:00, 74.03it/s]
+Best-fit parameters: [5.00000000e-02 6.99507269e-01 4.00000000e-01 4.74850775e+12
+ 5.15389488e-04 4.98775441e-01]
+Final chi2 (total): 15034637835586964029440.00
+chi2 (CMB): 15034637835586964029440.00
+chi2 (SNIa): 11116.17
+Degrees of freedom: 1784
+Reduced chi2: 8427487576001661952.00
+MCMC completed. Outputs generated: uqgpf_posteriors_v11.pdf, residuals_v11.csv, uqgpf_fit_v11.pdf, latex_table_v11.tex

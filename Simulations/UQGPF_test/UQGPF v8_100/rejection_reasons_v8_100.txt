@@ -1,0 +1,160 @@
+Error for om=0.10, h=0.50, gamma=2.86: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.10, h=0.50, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.10, h=0.50, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.10, h=0.56, gamma=2.86: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.10, h=0.56, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.10, h=0.56, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.10, h=0.61, gamma=2.86: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.10, h=0.61, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.10, h=0.61, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.10, h=0.67, gamma=2.86: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.10, h=0.67, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.10, h=0.67, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.10, h=0.73, gamma=2.86: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.10, h=0.73, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.10, h=0.73, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.10, h=0.79, gamma=2.86: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.10, h=0.79, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.10, h=0.79, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.10, h=0.84, gamma=2.86: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.10, h=0.84, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.10, h=0.84, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.10, h=0.90, gamma=2.86: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.10, h=0.90, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.10, h=0.90, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.16, h=0.50, gamma=2.86: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.16, h=0.50, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.16, h=0.50, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.16, h=0.56, gamma=2.86: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.16, h=0.56, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.16, h=0.56, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.16, h=0.61, gamma=2.86: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.16, h=0.61, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.16, h=0.61, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.16, h=0.67, gamma=2.86: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.16, h=0.67, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.16, h=0.67, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.16, h=0.73, gamma=2.86: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.16, h=0.73, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.16, h=0.73, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.16, h=0.79, gamma=2.86: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.16, h=0.79, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.16, h=0.79, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.16, h=0.84, gamma=2.86: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.16, h=0.84, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.16, h=0.84, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.16, h=0.90, gamma=2.86: Error in Fortran called from calc_transfer:
+HMCode INTEGRATE, Integration timed out
+Error for om=0.16, h=0.90, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.16, h=0.90, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.21, h=0.50, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.21, h=0.50, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.21, h=0.56, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.21, h=0.56, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.21, h=0.61, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.21, h=0.61, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.21, h=0.67, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.21, h=0.67, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.21, h=0.73, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.21, h=0.73, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.21, h=0.79, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.21, h=0.79, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.21, h=0.84, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.21, h=0.84, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.21, h=0.90, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.21, h=0.90, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.27, h=0.50, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.27, h=0.50, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.27, h=0.56, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.27, h=0.56, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.27, h=0.61, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.27, h=0.61, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.27, h=0.67, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.27, h=0.67, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.27, h=0.73, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.27, h=0.73, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.27, h=0.79, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.27, h=0.79, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.27, h=0.84, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.27, h=0.84, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.27, h=0.90, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.27, h=0.90, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.33, h=0.50, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.33, h=0.50, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.33, h=0.56, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.33, h=0.56, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.33, h=0.61, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.33, h=0.61, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.33, h=0.67, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.33, h=0.67, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.33, h=0.73, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.33, h=0.73, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.33, h=0.79, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.33, h=0.79, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.33, h=0.84, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.33, h=0.84, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.33, h=0.90, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.33, h=0.90, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.39, h=0.50, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.39, h=0.50, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.39, h=0.56, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.39, h=0.56, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.39, h=0.61, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.39, h=0.61, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.39, h=0.67, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.39, h=0.67, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.39, h=0.73, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.39, h=0.73, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.39, h=0.79, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.39, h=0.79, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.39, h=0.84, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.39, h=0.84, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.39, h=0.90, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.39, h=0.90, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.44, h=0.50, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.44, h=0.50, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.44, h=0.56, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.44, h=0.56, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.44, h=0.61, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.44, h=0.61, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.44, h=0.67, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.44, h=0.67, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.44, h=0.73, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.44, h=0.73, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.44, h=0.79, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.44, h=0.79, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.44, h=0.84, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.44, h=0.84, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.44, h=0.90, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.44, h=0.90, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.50, h=0.50, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.50, h=0.50, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.50, h=0.56, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.50, h=0.56, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.50, h=0.61, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.50, h=0.61, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.50, h=0.67, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.50, h=0.67, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.50, h=0.73, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.50, h=0.73, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.50, h=0.79, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.50, h=0.79, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.50, h=0.84, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.50, h=0.84, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.50, h=0.90, gamma=3.43: dark energy model has w + wa > 0, giving w>0 at high redshift
+Error for om=0.50, h=0.90, gamma=4.00: dark energy model has w + wa > 0, giving w>0 at high redshift

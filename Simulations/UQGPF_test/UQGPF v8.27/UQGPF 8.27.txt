@@ -1,0 +1,352 @@
+import os
+os.environ['PYDEVD_DISABLE_FILE_VALIDATION'] = '1'
+
+import zipfile
+import glob
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import emcee
+import corner
+from scipy.integrate import cumulative_trapezoid
+from multiprocessing import Pool
+import camb
+from camb import model
+import time
+from tqdm import tqdm
+import scipy.interpolate as interp
+
+# گام ۱: استخراج و لود (همان)
+def extract_zip(zip_path, extract_to):
+    if not os.path.exists(extract_to):
+        os.makedirs(extract_to)
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(extract_to)
+    print(f"Extracted {zip_path} to {extract_to}")
+
+zip_files = glob.glob('**/actlite_3yr_v2p2.zip', recursive=True) + glob.glob('**/Reference.zip', recursive=True)
+for zip_path in zip_files:
+    extract_dir = zip_path.replace('.zip', '_extract')
+    extract_zip(zip_path, extract_dir)
+
+cl_path = glob.glob('**/ACT+SPT_cl.dat', recursive=True)[0]
+cov_path = glob.glob('**/ACT+SPT_cov.dat', recursive=True)[0]
+snia_path = glob.glob('**/ES_AND_COVARPantheon%2BSH0ES.dat.txt', recursive=True)[0]
+snia_cov_paths = glob.glob('**/ES_AND_COVARPantheon%2BSH0ES_STAT%2BSYS.txt', recursive=True)
+snia_cov_path = snia_cov_paths[0] if snia_cov_paths else None
+print(f"Found: cl={cl_path}, cov={cov_path}, snia={snia_path}, snia_cov={snia_cov_path}")
+
+# BAO data (همان)
+z_bao = np.array([0.38, 0.51, 0.61])
+Dv_obs = np.array([1477, 1877, 2140])
+Dv_err = np.array([16, 25, 30])
+inv_cov_bao = np.diag(1 / Dv_err**2)
+
+# گام ۲: بارگذاری داده‌ها (همان)
+def load_cov_custom(file_path, expected_size):
+    flat_data = []
+    expected_elements = expected_size * expected_size
+    with open(file_path, 'r') as f:
+        for line in f:
+            line = line.strip().replace('|', '').replace('---', '')
+            if not line or line.startswith('#'):
+                continue
+            try:
+                row = [float(x) for x in line.split() if x]
+                flat_data.extend(row)
+            except ValueError:
+                print(f"Skipping invalid line: {line}")
+                continue
+    num_elements = len(flat_data)
+    print(f"Loaded {num_elements} elements from cov file (expected ~{expected_elements})")
+    if num_elements != expected_elements:
+        if num_elements > expected_elements:
+            flat_data = flat_data[:expected_elements]
+            print("Warning: Truncated extra elements")
+        else:
+            flat_data.extend([0.0] * (expected_elements - num_elements))
+            print("Warning: Padded with zeros to reach expected size")
+    cov = np.array(flat_data).reshape(expected_size, expected_size)
+    cov = (cov + cov.T) / 2
+    cov += np.eye(cov.shape[0]) * 1e-10
+    inv_cov = np.linalg.inv(cov)
+    print(f"Loaded cov matrix: shape={cov.shape}")
+    return cov, inv_cov
+
+def load_act_spt_data(cl_path, cov_path):
+    cl_data = np.loadtxt(cl_path)
+    ell = cl_data[:, 0].astype(int)
+    cl_obs = cl_data[:, 1]
+    cov, inv_cov = load_cov_custom(cov_path, 89)
+    return ell, cl_obs, cov, inv_cov
+
+def load_snia_data(file_path, cov_path=None):
+    data = pd.read_csv(file_path, sep=r'\s+', on_bad_lines='skip', engine='python')
+    z = data.get('zHD', data.get('z', None)).values
+    mu_obs = data.get('MU_SH0ES', data.get('mu', None)).values
+    mu_err = data.get('MU_SH0ES_ERR_DIAG', data.get('err', None)).values
+    print(f"Loaded SNIa: {len(z)} points (full)")
+    if cov_path and os.path.exists(cov_path):
+        print(f"Loading full SNIa cov from {cov_path}")
+        cov, inv_cov = load_cov_custom(cov_path, len(z))
+    else:
+        print("Using diagonal errors")
+        cov = np.diag(mu_err**2)
+        inv_cov = np.linalg.inv(cov)
+    return z, mu_obs, mu_err, cov, inv_cov
+
+ell, cl_obs, cov_cmb, inv_cov_cmb = load_act_spt_data(cl_path, cov_path)
+z_snia, mu_obs_snia, mu_err_snia, cov_snia, inv_cov_snia = load_snia_data(snia_path, snia_cov_path)
+
+# گام جدید: پیش‌محاسبه CAMB grid (همان)
+def compute_cl_for_params(params):
+    om, h, gam, ell, lmax_high = params
+    pars = camb.CAMBparams()
+    pars.set_cosmology(H0=100*h, ombh2=0.022, omch2=om * h**2 - 0.022, tau=0.06)
+    pars.InitPower.set_params(As=2e-9, ns=0.96)
+    pars.set_accuracy(AccuracyBoost=3, lSampleBoost=2, lAccuracyBoost=2)
+    pars.set_for_lmax(lmax_high, lens_potential_accuracy=3)
+    pars.max_l_tensor = lmax_high
+    pars.NonLinear = model.NonLinear_both
+    results = camb.get_results(pars)
+    cl_base = results.get_lensed_scalar_cls(lmax=lmax_high, CMB_unit='muK', raw_cl=True)[:, 0]
+    cl_base = cl_base[:len(ell)]
+    return cl_base * (1 + gam * np.log(1 + ell / 1000))
+
+def precompute_camb_grid(ell, pool=None):
+    grid_file = 'camb_grid.npz'
+    if os.path.exists(grid_file):
+        print(f"Loading precomputed CAMB grid from {grid_file}...")
+        data = np.load(grid_file)
+        return (interp.RegularGridInterpolator((data['omega_m_vals'], data['h_vals'], data['gamma_vals']), data['cl_grid'], bounds_error=False, fill_value=None),
+                data['omega_m_vals'], data['h_vals'], data['gamma_vals'])
+
+    print("Precomputing CAMB grid...")
+    start_time = time.time()
+    omega_m_vals = np.linspace(0.1, 0.5, 5)
+    h_vals = np.linspace(0.5, 1.0, 5)
+    gamma_vals = np.linspace(0, 1, 3)
+    cl_grid = np.zeros((len(omega_m_vals), len(h_vals), len(gamma_vals), len(ell)))
+    lmax_high = 6000
+
+    for i, om in enumerate(tqdm(omega_m_vals)):
+        param_list = [(om, h, gam, ell, lmax_high) for h in h_vals for gam in gamma_vals]
+        if pool:
+            results = list(pool.imap_unordered(compute_cl_for_params, param_list))
+        else:
+            results = [compute_cl_for_params(p) for p in tqdm(param_list)]
+        
+        idx = 0
+        for j in range(len(h_vals)):
+            for k in range(len(gamma_vals)):
+                cl_grid[i, j, k] = results[idx]
+                idx += 1
+        
+        np.savez(grid_file + f'_checkpoint_{i}', cl_grid=cl_grid[:i+1], omega_m_vals=omega_m_vals[:i+1], h_vals=h_vals, gamma_vals=gamma_vals)
+
+    np.savez(grid_file, cl_grid=cl_grid, omega_m_vals=omega_m_vals, h_vals=h_vals, gamma_vals=gamma_vals)
+    
+    interpolator = interp.RegularGridInterpolator((omega_m_vals, h_vals, gamma_vals), cl_grid, bounds_error=False, fill_value=None)
+    print(f"CAMB grid precomputed and saved in {time.time() - start_time:.2f} seconds!")
+    return interpolator, omega_m_vals, h_vals, gamma_vals
+
+with Pool(processes=4) as pool:
+    camb_interpolator, omega_m_vals, h_vals, gamma_vals = precompute_camb_grid(ell, pool=pool)
+
+# گام ۳: مدل UQGPF (فیکس scaling: حذف /500, add *1e-9 برای match scale)
+def model_uqgpf(ell, theta, interpolator, omega_m_vals, h_vals, gamma_vals):
+    start_time = time.time()
+    Omega_m, h, gamma, beta, alpha = theta
+    point = np.array([[Omega_m, h, gamma]])
+    if (Omega_m < omega_m_vals.min() or Omega_m > omega_m_vals.max() or
+        h < h_vals.min() or h > h_vals.max() or
+        gamma < gamma_vals.min() or gamma > gamma_vals.max()):
+        print("Warning: Theta out of bounds, returning nan")
+        return np.full_like(ell, np.nan)
+    cl_base = interpolator(point)[0]
+    if np.any(np.isnan(cl_base)):
+        print("Warning: Interpolation returned nan")
+        return np.full_like(ell, np.nan)
+    # فیکس: scaling calibrate شده - cl_base ~1e9, *1e-9 * factor → mean ~700
+    cl_model = cl_base * 1e-9 * (1 + beta * np.exp(-ell / alpha)) * (ell * (ell + 1) / (2 * np.pi))
+    time_taken = time.time() - start_time
+    print(f"model_uqgpf time: {time_taken:.4f}s, mean(cl_model)={np.mean(cl_model):.2f}, mean(cl_obs)={np.mean(cl_obs):.2f}")
+    return cl_model
+
+def mu_theory(z, theta):
+    start = time.time()
+    Omega_m, h, gamma, beta, alpha = theta
+    def H(x):
+        Om = Omega_m * (1 + x)**3
+        Ol = (1 - Omega_m) * (1 + x)**(3 * (1 + gamma)) * np.exp(beta * np.exp(-x / alpha))
+        return h * np.sqrt(Om + Ol)
+    z_grid = np.linspace(0, np.max(z), 1000)  # بیشتر points
+    int_grid = cumulative_trapezoid(1 / H(z_grid), z_grid, initial=0)
+    dl = interp.interp1d(z_grid, int_grid)(z)
+    mu = 5 * np.log10(dl * (1 + z)) + 25 + 19.5  # اضافه calib M ~19.5 برای offset ~22
+    time_taken = time.time() - start
+    print(f"mu_theory time: {time_taken:.4f}s")
+    return mu
+
+def Dv_theory(z, theta):
+    Omega_m, h, gamma, beta, alpha = theta
+    def H(x):
+        Om = Omega_m * (1 + x)**3
+        Ol = (1 - Omega_m) * (1 + x)**(3 * (1 + gamma)) * np.exp(beta * np.exp(-x / alpha))
+        return h * np.sqrt(Om + Ol)
+    chi = cumulative_trapezoid(1 / H(np.linspace(0, z, 100)), np.linspace(0, z, 100), initial=0)[-1]
+    return (z * chi**2 / H(z))**(1/3)
+
+# گام ۴: Likelihood (threshold بالاتر, debug prints)
+def log_likelihood_cmb(theta, ell, cl_obs, inv_cov, interpolator, omega_m_vals, h_vals, gamma_vals):
+    start = time.time()
+    cl_model = model_uqgpf(ell, theta, interpolator, omega_m_vals, h_vals, gamma_vals)
+    if np.any(np.isnan(cl_model)):
+        print("CMB: nan in model, returning -inf")
+        return -np.inf
+    residual = cl_obs - cl_model
+    residual = residual.ravel()
+    chi2 = np.dot(residual, np.dot(inv_cov, residual))
+    if chi2 > 1e15:
+        print(f"CMB: chi2 too large ({chi2:.2e}), returning -inf")
+        return -np.inf
+    time_taken = time.time() - start
+    print(f"CMB likelihood time: {time_taken:.4f}s, chi2={chi2:.2f}")
+    return -0.5 * chi2
+
+def log_likelihood_snia(theta, z, mu_obs, inv_cov):
+    start = time.time()
+    mu_model = mu_theory(z, theta)
+    if np.any(np.isnan(mu_model)):
+        print("SNIa: nan in model, returning -inf")
+        return -np.inf
+    residual = mu_obs - mu_model
+    chi2 = np.dot(residual, np.dot(inv_cov, residual))
+    if chi2 > 1e10:
+        print(f"SNIa: chi2 too large ({chi2:.2e}), returning -inf")
+        return -np.inf
+    time_taken = time.time() - start
+    print(f"SNIa likelihood time: {time_taken:.4f}s, chi2={chi2:.2f}")
+    return -0.5 * chi2
+
+def log_likelihood_bao(theta, z_bao, Dv_obs, inv_cov_bao):
+    Dv_model = np.array([Dv_theory(zi, theta) for zi in z_bao])
+    if np.any(np.isnan(Dv_model)):
+        print("BAO: nan in model, returning -inf")
+        return -np.inf
+    residual = Dv_obs - Dv_model
+    chi2 = np.dot(residual, np.dot(inv_cov_bao, residual))
+    if chi2 > 1e10:
+        print(f"BAO: chi2 too large ({chi2:.2e}), returning -inf")
+        return -np.inf
+    return -0.5 * chi2
+
+def log_prior(theta):
+    Omega_m, h, gamma, beta, alpha = theta
+    # wider bounds
+    if 0.01 < Omega_m < 1.0 and 0.3 < h < 1.5 and -1 < gamma < 2 and -20 < beta < 30 and 0.01 < alpha < 500:
+        return 0.0
+    print("Prior: out of bounds")
+    return -np.inf
+
+def log_posterior(theta, *args):
+    lp = log_prior(theta)
+    if not np.isfinite(lp):
+        print("Post: prior -inf")
+        return -np.inf
+    ll_cmb = log_likelihood_cmb(theta, *args[:3], args[9], *args[10:])
+    if not np.isfinite(ll_cmb):
+        print("Post: cmb -inf")
+        return -np.inf
+    ll_snia = log_likelihood_snia(theta, *args[3:6])
+    if not np.isfinite(ll_snia):
+        print("Post: snia -inf")
+        return -np.inf
+    ll_bao = log_likelihood_bao(theta, *args[6:9])
+    if not np.isfinite(ll_bao):
+        print("Post: bao -inf")
+        return -np.inf
+    return lp + ll_cmb + ll_snia + ll_bao
+
+# گام ۵: اجرای MCMC (بیشتر, mixed moves با Gaussian, random initial)
+ndim = 5
+nwalkers = 256
+nsteps = 20000
+discard = 4000
+thin = 40
+bounds = [(0.01, 1.0), (0.3, 1.5), (-1, 2), (-20, 30), (0.01, 500)]
+pos = np.random.uniform([b[0] for b in bounds], [b[1] for b in bounds], size=(nwalkers, ndim))  # random در bounds wide
+args = (ell, cl_obs, inv_cov_cmb, z_snia, mu_obs_snia, inv_cov_snia, z_bao, Dv_obs, inv_cov_bao, camb_interpolator, omega_m_vals, h_vals, gamma_vals)
+
+start_time = time.time()
+sampler = emcee.EnsembleSampler(nwalkers, ndim, log_posterior, args=args, 
+                                moves=[(emcee.moves.StretchMove(a=2.0), 0.6), (emcee.moves.DEMove(), 0.2), (emcee.moves.GaussianMove(cov=1e-4 * np.eye(ndim)), 0.2)])
+sampler.run_mcmc(pos, nsteps, progress=True)
+
+acc_frac = np.mean(sampler.acceptance_fraction)
+print(f"Mean acceptance fraction: {acc_frac:.3f}")
+
+tau = sampler.get_autocorr_time(tol=0)
+print(f"Autocorrelation time: {tau}")
+
+print(f"Total MCMC time: {time.time() - start_time:.2f} seconds")
+
+# گام ۶: پردازش خروجی‌ها (اضافه residuals plot)
+samples = sampler.get_chain(discard=discard, thin=thin, flat=True)
+if len(samples) < 100:
+    print("Warning: Too few samples")
+
+labels = ["\\Omega_m", "h", "\\gamma", "\\beta", "\\alpha"]
+
+fig = corner.corner(samples, labels=labels, quantiles=[0.16, 0.5, 0.84], show_titles=True)
+fig.savefig("uqgpf_posteriors_v8_27.pdf")
+
+theta_med = np.median(samples, axis=0)
+mu_model = mu_theory(z_snia, theta_med)
+residuals = mu_obs_snia - mu_model
+pd.DataFrame(residuals).to_csv("residuals_v8_27.csv", index=False)
+
+# جدید: residuals plot
+plt.figure()
+plt.scatter(z_snia, residuals, s=5)
+plt.xlabel("z")
+plt.ylabel("Residuals")
+plt.savefig("residuals_plot_v8_27.pdf")
+
+table = "\\begin{table}\n\\centering\n\\begin{tabular}{cc}\nParameter & Value \\\\\n\\hline\n"
+for label, val in zip(labels, theta_med):
+    table += f"{label} & {val:.4f} \\\\\n"
+table += "\\end{tabular}\n\\end{table}"
+with open("latex_table_v8_27.tex", "w") as f:
+    f.write(table)
+
+plt.figure()
+cl_model = model_uqgpf(ell, theta_med, camb_interpolator, omega_m_vals, h_vals, gamma_vals)
+plt.plot(ell, cl_obs, label="Data")
+plt.plot(ell, cl_model, label="UQGPF Fit")
+plt.xlabel("ell")
+plt.ylabel("C_l")
+plt.legend()
+plt.savefig("uqgpf_fit_v8_27.pdf")
+
+# چی2/dof
+chi2_cmb_final = -2 * log_likelihood_cmb(theta_med, *args[:3], args[9], *args[10:])
+chi2_snia_final = -2 * log_likelihood_snia(theta_med, *args[3:6])
+chi2_bao_final = -2 * log_likelihood_bao(theta_med, *args[6:9])
+dof = len(cl_obs) + len(z_snia) + len(z_bao) - ndim
+chi2_total = chi2_cmb_final + chi2_snia_final + chi2_bao_final
+print(f"Final chi2_total={chi2_total:.2f}, dof={dof}, chi2/dof={chi2_total / dof:.2f}")
+
+# chi2 history
+chi2_hist = []
+reasons = []
+for s in samples[np.random.choice(len(samples), 100)]:
+    lp = log_posterior(s, *args)
+    chi2 = -2 * lp if np.isfinite(lp) else np.inf
+    chi2_hist.append(chi2)
+    reasons.append("valid" if np.isfinite(lp) else "rejected")
+np.savetxt("chi2_history_v8_27.txt", chi2_hist)
+with open("rejection_reasons_v8_27.txt", "w") as f:
+    f.write("\n".join(reasons))
+
+print("Execution complete! Outputs generated.")

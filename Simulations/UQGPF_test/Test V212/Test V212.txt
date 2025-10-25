@@ -1,0 +1,214 @@
+# Install required packages
+!pip install emcee corner scipy numpy matplotlib pandas zipfile36 camb
+
+import os
+import zipfile
+import glob
+import numpy as np
+import scipy.integrate as integrate
+import emcee
+import corner
+import matplotlib.pyplot as plt
+import pandas as pd
+from google.colab import files
+from tqdm import tqdm
+import camb
+from camb import model
+
+# Step 1: Upload and extract ZIP files (robust version)
+uploaded = files.upload()  # Upload actlite_3yr_v2p2.zip and Reference.zip
+
+# Extract ZIPs
+for fn in uploaded.keys():
+    if fn.endswith('.zip'):
+        with zipfile.ZipFile(fn, 'r') as zip_ref:
+            zip_ref.extractall(fn[:-4])  # Extract to folder named after ZIP
+print("Extraction completed.")
+
+# Find data paths dynamically
+act_dir = glob.glob('actlite_3yr_v2p2*')[0] if glob.glob('actlite_3yr_v2p2*') else None
+ref_dir = glob.glob('Reference*')[0] if glob.glob('Reference*') else None
+
+# Load CMB data
+cl_file = glob.glob(f'{act_dir}/**/ACT+SPT_cl.dat', recursive=True)[0]
+cov_file = glob.glob(f'{act_dir}/**/ACT+SPT_cov.dat', recursive=True)[0]
+
+data_cmb = np.loadtxt(cl_file, skiprows=1)  # Assuming first row is header if needed
+ell_cmb = data_cmb[:, 0]
+Cl_obs = data_cmb[:, 1]
+Cl_err = data_cmb[:, 2]  # If errors are in the file; otherwise use cov
+
+# Load covariance (custom parsing)
+cov_lines = open(cov_file).readlines()
+cov_data = []
+for line in cov_lines:
+    if '|' not in line:
+        cov_data.extend([float(x) for x in line.split()])
+cov_mat = np.array(cov_data).reshape((len(ell_cmb), len(ell_cmb)))
+
+# Regularize covariance to reduce condition number
+cond_num = np.linalg.cond(cov_mat)
+print(f"Covariance condition number: {cond_num:.2e}")
+cov_mat += np.eye(cov_mat.shape[0]) * 1e-10  # Small regularization
+inv_cov = np.linalg.pinv(cov_mat)  # Pseudo-inverse
+
+# Load SNIa data
+snia_file = glob.glob(f'{ref_dir}/**/ES_AND_COVARPantheon%2BSH0ES.dat.txt', recursive=True)[0]
+snia_data = pd.read_csv(snia_file, delim_whitespace=True, comment='#')
+z_snia = snia_data['zHD'].values
+mu_obs = snia_data['MU_SH0ES'].values
+mu_err = snia_data['MU_SH0ES_ERR_DIAG'].values
+
+# Filter invalid data
+valid_mask = ~np.isnan(z_snia) & ~np.isnan(mu_obs) & ~np.isnan(mu_err) & (mu_err > 0)
+z_snia = z_snia[valid_mask]
+mu_obs = mu_obs[valid_mask]
+mu_err = mu_err[valid_mask]
+print(f"Loaded {len(z_snia)} valid SNIa points.")
+
+# Physical constants (example values; adjust as needed)
+G = 6.67430e-11  # m^3 kg^-1 s^-2
+hbar = 1.0545718e-34  # J s
+c = 2.99792458e8  # m/s
+l_p = np.sqrt(hbar * G / c**3)  # Planck length
+
+# Step 2: Define improved UQGPF v2.1 model with CAMB integration
+def model_Cl(ell, Omega_m, h, gamma, f_a, m_a, lambda_s):
+    try:
+        # Set up CAMB parameters (base LambdaCDM-like)
+        pars = camb.CAMBparams()
+        pars.set_cosmology(H0=100*h, ombh2=0.0224, omch2=Omega_m* h**2 - 0.0224, tau=0.055)
+        pars.InitPower.set_params(As=2.1e-9, ns=0.965)
+        pars.set_for_lmax(4000, lens_potential_accuracy=1)  # Up to l=4000 for ACT+SPT
+        results = camb.get_results(pars)
+        powers = results.get_cmb_power_spectra(pars, CMB_unit='muK', lmax=4000)
+        Cl_camb = powers['total'][:, 0]  # TT spectrum (l(l+1)/2pi Cl in muK^2, but we normalize)
+        
+        # Interpolate to match ell_cmb
+        ell_full = np.arange(0, len(Cl_camb))
+        Cl_interp = np.interp(ell, ell_full, Cl_camb)
+        
+        # Apply UQGPF corrections: damping and axion-like terms
+        ell_damp = 1000 * h  # Damping scale
+        correction = gamma * Omega_m * Cl_interp + (f_a**2 / m_a**2) * ell**lambda_s * np.exp(-ell / ell_damp)
+        return Cl_interp + correction
+    except Exception as e:
+        print(f"CAMB error: {e}")
+        return np.full_like(ell, np.inf)  # Return invalid to penalize
+
+def model_mu(z, Omega_m, h, gamma):
+    H0 = 100 * h  # km/s/Mpc
+    def integrand(zz):
+        E = np.sqrt(Omega_m * (1 + zz)**3 + (1 - Omega_m) * (1 + zz)**(3 * (1 + gamma)))
+        return 1 / E
+    # Improved integration with simpson for accuracy
+    dl = np.zeros_like(z)
+    for i, zz in enumerate(z):
+        if zz == 0:
+            dl[i] = 0
+        else:
+            z_grid = np.linspace(0, zz, 1000)
+            int_vals = integrand(z_grid)
+            dl[i] = (c / H0) * integrate.simpson(int_vals, z_grid) * (1 + zz)
+    mu = 5 * np.log10(dl) + 25
+    return np.clip(mu, 0, np.inf)  # Safe clip
+
+# Step 3: Log-likelihood (improved with weighting)
+def log_likelihood(theta, ell_cmb, Cl_obs, inv_cov, z_snia, mu_obs, mu_err):
+    Omega_m, h, gamma, f_a, m_a, lambda_s = theta
+    # CMB part (weighted 0.9 to balance with SNIa)
+    Cl_model = model_Cl(ell_cmb, *theta)
+    if np.any(np.isinf(Cl_model)):
+        return -np.inf
+    delta = Cl_obs - Cl_model
+    chi2_cmb = 0.9 * delta.T @ inv_cov @ delta
+    # SNIa part
+    mu_model = model_mu(z_snia, Omega_m, h, gamma)
+    chi2_snia = np.sum(((mu_obs - mu_model) / mu_err)**2)
+    return -0.5 * (chi2_cmb + chi2_snia)
+
+# Step 4: Improved Gaussian priors
+def log_prior(theta):
+    Omega_m, h, gamma, f_a, m_a, lambda_s = theta
+    # Gaussian priors centered on standard values, with wide sigma
+    prior_om = -0.5 * ((Omega_m - 0.3) / 0.1)**2
+    prior_h = -0.5 * ((h - 0.67) / 0.05)**2
+    prior_gamma = -0.5 * ((gamma - 0.3) / 0.1)**2
+    prior_fa = -0.5 * ((np.log10(f_a) - 12) / 1)**2  # Log scale
+    prior_ma = -0.5 * ((np.log10(m_a) + 4) / 1)**2  # Log scale
+    prior_ls = -0.5 * ((lambda_s - 0.5) / 0.1)**2
+    # Hard bounds to prevent invalid values
+    if not (0.01 < Omega_m < 0.6 and 0.6 < h < 0.8 and 0.05 < gamma < 0.5 and
+            1e10 < f_a < 1e14 and 1e-6 < m_a < 1e-2 and 0.2 < lambda_s < 0.8):
+        return -np.inf
+    return prior_om + prior_h + prior_gamma + prior_fa + prior_ma + prior_ls
+
+def log_posterior(theta, *args):
+    lp = log_prior(theta)
+    if not np.isfinite(lp):
+        return -np.inf
+    return lp + log_likelihood(theta, *args)
+
+# Step 5: Run MCMC with improvements
+ndim = 6
+nwalkers = 64
+nsteps = 20000
+
+# Initialize from v11 best-fit
+pos = np.array([0.05, 0.6995, 0.4, 4.75e12, 5.15e-4, 0.499]) + 1e-4 * np.random.randn(nwalkers, ndim)
+
+sampler = emcee.EnsembleSampler(nwalkers, ndim, log_posterior, args=(ell_cmb, Cl_obs, inv_cov, z_snia, mu_obs, mu_err))
+sampler.run_mcmc(pos, nsteps, progress=True)
+
+# Burn-in and thinning
+samples = sampler.get_chain(discard=2000, thin=15, flat=True)
+print(f"Flattened samples shape: {samples.shape}")
+
+# Step 6: Generate outputs
+labels = ['\\Omega_m', 'h', '\\gamma', 'f_a', 'm_a', '\\lambda_s']
+
+# Posteriors plot
+fig = corner.corner(samples, labels=labels, truths=np.median(samples, axis=0))
+fig.savefig('uqgpf_posteriors_v12_camb.pdf')
+files.download('uqgpf_posteriors_v12_camb.pdf')
+
+# Best-fit parameters (median)
+best_params = np.median(samples, axis=0)
+print(f"Best-fit parameters: {best_params}")
+
+# Chi2 calculation
+log_like_best = log_likelihood(best_params, ell_cmb, Cl_obs, inv_cov, z_snia, mu_obs, mu_err)
+chi2_total = -2 * log_like_best
+chi2_cmb = np.sum(((Cl_obs - model_Cl(ell_cmb, *best_params)) ** 2) / Cl_err**2) if 'Cl_err' in globals() else 'N/A'  # Approximate
+chi2_snia = np.sum(((mu_obs - model_mu(z_snia, *best_params[:3])) ** 2) / mu_err**2)
+dof = len(Cl_obs) + len(mu_obs) - ndim
+reduced_chi2 = chi2_total / dof
+print(f"Final chi2 (total): {chi2_total:.2f}\nchi2 (CMB): {chi2_cmb}\nchi2 (SNIa): {chi2_snia:.2f}\nDegrees of freedom: {dof}\nReduced chi2: {reduced_chi2:.2f}")
+
+# Residuals CSV (with ell)
+Cl_model_best = model_Cl(ell_cmb, *best_params)
+residuals = (Cl_obs - Cl_model_best) / Cl_err  # Normalized if Cl_err available
+df_res = pd.DataFrame({'ell': ell_cmb, 'residual': residuals})
+df_res.to_csv('residuals_v12_camb.csv', index=False)
+files.download('residuals_v12_camb.csv')
+
+# Fit plot
+plt.errorbar(ell_cmb, Cl_obs, yerr=Cl_err, fmt='o', label='Data', color='orange')
+plt.plot(ell_cmb, Cl_model_best, label='UQGPF v2.1 + CAMB Fit', color='blue')
+plt.xlabel('ell')
+plt.ylabel('C_l')
+plt.legend()
+plt.savefig('uqgpf_fit_v12_camb.pdf')
+files.download('uqgpf_fit_v12_camb.pdf')
+
+# LaTeX table with median ± 1σ
+percentiles = np.percentile(samples, [16, 50, 84], axis=0)
+with open('latex_table_v12_camb.tex', 'w') as f:
+    f.write('\\begin{table}\n\\centering\n\\begin{tabular}{cc}\nParameter & Value \\\\ \\hline\n')
+    for i, lab in enumerate(labels):
+        med, low, high = percentiles[1, i], percentiles[0, i], percentiles[2, i]
+        f.write(f'{lab} & ${med:.4f}^{{+{high - med:.4f}}}_{{-{med - low:.4f}}}$ \\\\ \n')
+    f.write('\\end{tabular}\n\\end{table}\n')
+files.download('latex_table_v12_camb.tex')
+
+print("MCMC V12 with CAMB completed. Outputs downloaded.")

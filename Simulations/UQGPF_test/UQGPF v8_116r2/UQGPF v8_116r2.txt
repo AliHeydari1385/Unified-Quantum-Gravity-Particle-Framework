@@ -1,0 +1,202 @@
+# UQGPF v8.116r2 - fix output shape + diagnostics
+
+!pip install camb emcee corner getdist tqdm h5py numpy scipy matplotlib pandas joblib -q
+
+import numpy as np
+from scipy.interpolate import interpn
+import camb
+from camb import model
+import emcee
+import corner
+import matplotlib.pyplot as plt
+import pandas as pd
+import os
+from tqdm import tqdm
+from joblib import Parallel, delayed
+import warnings
+warnings.filterwarnings("ignore", category=RuntimeWarning)
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
+# Constants
+LMAX = 2500
+LMIN = 2
+NUM_L = LMAX - LMIN + 1
+VERSION = 'v8_116r2'
+NPARAMS = 7
+NWALKERS = 128
+NSTEPS = 5000
+BURN_IN = 1000
+THIN = 15
+N_PROCS = 4
+
+# Paths
+REFDIR = '/content/'
+SNIA_DATA_PATH = os.path.join(REFDIR, 'Pantheon+SH0ES.dat')
+SNIA_COV_PATH  = os.path.join(REFDIR, 'Pantheon+SH0ES_STAT+SYS.cov')
+CMB_CL_PATH    = os.path.join(REFDIR, 'ACT+SPT_cl.dat')
+CMB_COV_PATH   = os.path.join(REFDIR, 'ACT+SPT_cov.dat')
+BBL_PATH       = os.path.join(REFDIR, 'Bbl_148_south_v2p2.dat')
+GRID_FILE      = f'/content/camb_grid_{VERSION}.npz'
+
+# --- Load data ---
+def load_data():
+    snia_df = pd.read_csv(SNIA_DATA_PATH, sep=r'\s+', header=None, skiprows=1, engine='python')
+    if snia_df.shape[1] != 47:
+        raise ValueError(f"Expected 47 cols, got {snia_df.shape[1]}")
+    snia_df = snia_df[[0, 4, 5, 8, 9]]
+    snia_df.columns = ['CID','zCMB','zCMBERR','m_b_corr','m_b_err']
+    snia_df['CID'] = snia_df['CID'].astype(str)
+    for col in ['zCMB','zCMBERR','m_b_corr','m_b_err']:
+        snia_df[col] = pd.to_numeric(snia_df[col], errors='coerce')
+    snia_df.dropna(inplace=True)
+
+    def wavg(g, val, err): w=1/g[err]**2; return np.average(g[val], weights=w)
+    def werr(g, err): return 1/np.sqrt(np.sum(1/g[err]**2))
+
+    unique_snia = snia_df.groupby('CID').apply(
+        lambda g: pd.Series({'zCMB':wavg(g,'zCMB','zCMBERR'),
+                             'm_b_corr':wavg(g,'m_b_corr','m_b_err')}),
+        include_groups=False).reset_index()
+
+    unique_mu_err = snia_df.groupby('CID').apply(lambda g: werr(g,'m_b_err'), include_groups=False).values
+
+    snia_z  = unique_snia['zCMB'].values
+    snia_mu = unique_snia['m_b_corr'].values
+    esize = 1701
+    cov_data = np.loadtxt(SNIA_COV_PATH, skiprows=1)
+    if len(cov_data) == esize**2:
+        full_cov = cov_data.reshape((esize, esize))
+        snia_cov = full_cov if len(snia_z)==esize else np.diag(unique_mu_err**2)
+    else:
+        snia_cov = np.diag(unique_mu_err**2)
+    snia_inv_cov = np.linalg.inv(snia_cov)
+
+    cmb_cl = np.loadtxt(CMB_CL_PATH, usecols=1)
+
+    # load CMB cov robustly
+    cmblist=[]
+    with open(CMB_COV_PATH,'r') as f:
+        for line in f:
+            for p in line.replace('|',' ').split():
+                try: cmblist.append(float(p))
+                except: pass
+    cmblist=np.array(cmblist)
+    m=int(np.sqrt(len(cmblist)))
+    if m*m==len(cmblist):
+        cmb_cov = cmblist.reshape((m,m))
+    else:
+        cmb_err = np.loadtxt(CMB_CL_PATH,usecols=2)
+        cmb_cov = np.diag(cmb_err**2)
+    cmb_inv_cov = np.linalg.inv(cmb_cov)
+
+    bbl = np.loadtxt(BBL_PATH)[:,1:]
+    return snia_z, snia_mu, snia_cov, snia_inv_cov, cmb_cl, cmb_inv_cov, bbl, cmb_cov.shape[0]
+
+snia_z, snia_mu, snia_cov, snia_inv_cov, cmb_cl, cmb_inv_cov, bbl, NCMB = load_data()
+NSNIA = len(snia_z)
+
+# --- CAMB grid ---
+def compute_point(om,h,gamma,idx):
+    try:
+        pars = camb.CAMBparams()
+        pars.set_cosmology(H0=h*100, ombh2=0.0224, omch2=(om-0.0224/h**2)*h**2, omk=0)
+        pars.set_dark_energy(w=(gamma-3)/3, wa=0, dark_energy_model='fluid')
+        pars.set_for_lmax(LMAX, lens_potential_accuracy=1)
+        res = camb.get_results(pars)
+        cl = res.get_cmb_power_spectra(pars, CMB_unit='muK')['total'][:,0]
+        cl_out = np.full(LMAX+1, np.nan)
+        cl_out[:min(len(cl),LMAX+1)] = cl
+        mu_out = np.array([5*np.log10(res.luminosity_distance(z))+25 for z in snia_z])
+        return idx, cl_out, mu_out, None
+    except Exception as e:
+        return idx, None, None, str(e)
+
+def precompute_grids():
+    omv = np.linspace(0.05,0.55,8)
+    hv  = np.linspace(0.4,1.1,8)
+    gv  = np.linspace(1.5,5.5,8)
+    gp = (omv,hv,gv)
+    cl_grid = np.full((len(omv),len(hv),len(gv),LMAX+1), np.nan)
+    mu_grid = np.full((len(omv),len(hv),len(gv),NSNIA), np.nan)
+    tasks=[(om,h,g,(i,j,k)) for i,om in enumerate(omv) for j,h in enumerate(hv) for k,g in enumerate(gv)]
+    results=Parallel(n_jobs=N_PROCS)(delayed(compute_point)(*t) for t in tqdm(tasks))
+    for res in results:
+        (i,j,k),cl_out,mu_out,err=res
+        if err is None:
+            cl_grid[i,j,k]=cl_out
+            mu_grid[i,j,k]=mu_out
+    np.savez(GRID_FILE,grid_points=gp,cl_grid=cl_grid,mu_grid=mu_grid)
+    return gp,cl_grid,mu_grid
+
+if not os.path.exists(GRID_FILE):
+    grid_points, cl_grid, mu_grid=precompute_grids()
+else:
+    d=np.load(GRID_FILE)
+    grid_points=d['grid_points']
+    cl_grid=d['cl_grid']
+    mu_grid=d['mu_grid']
+
+# --- Theory ---
+def get_theory_cl(params):
+    om,h,gamma=params[:3]
+    try:
+        arr = interpn(grid_points, cl_grid, (om,h,gamma), method='linear', bounds_error=True)
+        arr = np.array(arr).ravel()
+        arr = arr[LMIN:LMAX+1]
+        return np.dot(bbl, arr).ravel()
+    except: return np.full(NCMB,np.nan)
+
+def get_theory_mu(params):
+    om,h,gamma,beta,alpha,Mt,scale=params
+    try:
+        arr = interpn(grid_points, mu_grid, (om,h,gamma), method='linear', bounds_error=True)
+        arr = np.array(arr).ravel()
+        arr += Mt
+        return arr.ravel()
+    except: return np.full(NSNIA, np.nan)
+
+# --- Likelihood + Prior ---
+valid_counter = {'total':0,'accepted':0}
+def log_likelihood(p):
+    valid_counter['total']+=1
+    mu_th = get_theory_mu(p)
+    if np.any(np.isnan(mu_th)): return -np.inf
+    cl_th = get_theory_cl(p)
+    if np.any(np.isnan(cl_th)): return -np.inf
+    chi2 = (snia_mu-mu_th)@snia_inv_cov@(snia_mu-mu_th)
+    chi2+= (cmb_cl-cl_th)@cmb_inv_cov@(cmb_cl-cl_th)
+    valid_counter['accepted']+=1
+    return -0.5*chi2
+
+def log_prior(p):
+    om,h,gamma,beta,alpha,Mt,scale=p
+    if (0.05<om<0.55 and 0.4<h<1.1 and 1.0<gamma<6.0 and
+        -10<beta<100 and 300<alpha<900 and -32<Mt<-28 and
+        -0.2<scale<0.1):
+        return 0
+    return -np.inf
+
+def log_prob(p):
+    lp=log_prior(p)
+    if not np.isfinite(lp): return -np.inf
+    ll=log_likelihood(p)
+    return lp+ll if np.isfinite(ll) else -np.inf
+
+# --- MCMC ---
+init = np.array([0.3,0.7,3.0,50,600,-30.0,-0.05]) + 1e-3*np.random.randn(NWALKERS,NPARAMS)
+sampler = emcee.EnsembleSampler(NWALKERS,NPARAMS,log_prob)
+sampler.run_mcmc(init,NSTEPS,progress=True)
+
+flats = sampler.get_chain(discard=BURN_IN,thin=THIN,flat=True)
+labels=['Omega_m','h','gamma','beta','alpha','M_tcalib','scale_rpower']
+corner.corner(flats,labels=labels)
+plt.savefig(f'uqgpf_posteriors_{VERSION}.pdf')
+
+best = np.median(flats,axis=0)
+sort_idx=np.argsort(snia_z)
+plt.errorbar(snia_z[sort_idx],snia_mu[sort_idx],yerr=np.sqrt(np.diag(snia_cov))[sort_idx],fmt='o',label='Data')
+plt.plot(snia_z[sort_idx],get_theory_mu(best)[sort_idx],label='UQGPF Fit')
+plt.legend()
+plt.savefig(f'uqgpf_fit_{VERSION}.pdf')
+
+print(f"Valid samples: {valid_counter['accepted']} / {valid_counter['total']} ({100*valid_counter['accepted']/valid_counter['total']:.2f}%)")

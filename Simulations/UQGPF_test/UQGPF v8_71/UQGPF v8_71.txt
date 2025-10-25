@@ -1,0 +1,333 @@
+# UQGPF v8.71 - Optimized for Google Colab with improved large cov loading
+# Developed by Grok based on user interactions
+
+# Install required packages
+!pip install camb emcee corner getdist tqdm h5py numpy scipy matplotlib pandas
+
+import os
+import zipfile
+import numpy as np
+import camb
+from camb import get_matter_power_interpolator
+import emcee
+import corner
+from getdist import MCSamples
+from getdist import plots
+from tqdm import tqdm
+import time
+import multiprocessing as mp
+import h5py
+import matplotlib.pyplot as plt
+import scipy
+from scipy.integrate import cumulative_trapezoid, quad
+import re  # For fallback parsing
+import pandas as pd  # For advanced SNIa parsing
+
+# Check versions
+print(f"CAMB version: {camb.__version__}")
+print(f"SciPy version: {scipy.__version__}")
+
+# Function to find and unzip files (unchanged)
+def find_and_unzip_files(zip_files, target_files):
+  extracted_path = 'extracted_data'
+  os.makedirs(extracted_path, exist_ok=True)
+  for zip_file in zip_files:
+      if os.path.exists(zip_file):
+          with zipfile.ZipFile(zip_file, 'r') as zip_ref:
+              zip_ref.extractall(extracted_path)
+  for root, _, files in os.walk(extracted_path):
+      for file in files:
+          if any(tf in file for tf in target_files):  # Flexible matching
+              return os.path.join(root, file)
+  return None
+
+# Custom parser for irregular cov files (improved for large files)
+def parse_cov_file(cov_path):
+  try:
+      cov_data = np.loadtxt(cov_path, dtype=float, comments=None, unpack=True).flatten()
+      print(f"Extracted {len(cov_data)} numbers from {cov_path} using np.loadtxt.")
+  except Exception as e:
+      print(f"np.loadtxt failed: {e}. Falling back to regex.")
+      numbers = []
+      with open(cov_path, 'r') as f:
+          for line in f:
+              found = re.findall(r'[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?', line)
+              numbers.extend([float(num) for num in found])
+      cov_data = np.array(numbers)
+      print(f"Extracted {len(cov_data)} numbers using regex.")
+  return cov_data
+
+# Load for CMB cl and cov (unchanged)
+def load_cmb_data(cl_path, cov_path):
+  if cl_path:
+      cl_data = np.loadtxt(cl_path, skiprows=1)
+      if cl_data.ndim == 1:
+          n_cmb = len(cl_data) // 2
+          ells = cl_data[0::2]
+          cls = cl_data[1::2]
+      else:
+          ells = cl_data[:, 0]
+          cls = cl_data[:, 1]
+          n_cmb = len(ells)
+      print(f"Loaded {n_cmb} CMB points from {cl_path}.")
+  else:
+      raise FileNotFoundError("ACT+SPT_cl.dat not found.")
+  
+  if cov_path:
+      try:
+          cov_data = parse_cov_file(cov_path)
+          expected_size = n_cmb * n_cmb
+          if len(cov_data) == expected_size:
+              cov = cov_data.reshape((n_cmb, n_cmb))
+          elif len(cov_data) > expected_size:
+              cov = cov_data[:expected_size].reshape((n_cmb, n_cmb))
+              print(f"Trimmed cov to {expected_size} elements.")
+          else:
+              cov = np.diag(np.ones(n_cmb))
+              print(f"Cov too small ({len(cov_data)} < {expected_size}). Using identity.")
+          cov = (cov + cov.T) / 2
+          print(f"Loaded cov with shape {cov.shape}")
+      except Exception as e:
+          print(f"Cov parse failed: {e}. Using identity cov.")
+          cov = np.diag(np.ones(n_cmb))
+  else:
+      cov = np.diag(np.ones(n_cmb))
+      print("Cov not found, using identity.")
+  
+  return ells, cls, cov, n_cmb
+
+# Advanced load for Pantheon+ SNIa using pandas (unchanged, but with cov improvement)
+def load_pantheon_data(data_path, cov_path=None, subsample=500):
+  if not data_path:
+      raise FileNotFoundError("SNIa data not found.")
+  
+  try:
+      df = pd.read_csv(data_path, sep='\s+', comment='#', on_bad_lines='skip')  # Updated to sep='\s+' to avoid warning
+      print(f"Loaded DataFrame with shape {df.shape} from {data_path}.")
+      
+      # Assume columns: try common names, fallback to indices
+      if 'z' in df.columns and 'mu' in df.columns and 'sigma' in df.columns:
+          z = df['z'].values
+          mu = df['mu'].values
+          sigma = df['sigma'].values
+      elif 'zHD' in df.columns and 'm_b_corr' in df.columns and 'm_b_corr_err_DIAG' in df.columns:  # Adjusted for common Pantheon+ names
+          z = df['zHD'].values
+          mu = df['m_b_corr'].values
+          sigma = df['m_b_corr_err_DIAG'].values
+      else:
+          numeric_cols = df.select_dtypes(include=np.number).columns[:3]
+          if len(numeric_cols) < 3:
+              raise ValueError("Less than 3 numeric columns found.")
+          z = df[numeric_cols[0]].values
+          mu = df[numeric_cols[1]].values
+          sigma = df[numeric_cols[2]].values
+      
+      n_snia = len(z)
+      print(f"Extracted {n_snia} SNIa points (z, mu, sigma).")
+      
+      # Load cov if separate file
+      if cov_path:
+          cov_data = parse_cov_file(cov_path)
+          expected_size = n_snia * n_snia
+          if len(cov_data) == expected_size:
+              cov_snia = cov_data.reshape((n_snia, n_snia))
+              cov_snia = (cov_snia + cov_snia.T) / 2
+              print(f"Loaded full SNIa cov with shape {cov_snia.shape} from {cov_path}.")
+          elif abs(len(cov_data) - expected_size) < 10:  # Tolerance for extra lines
+              cov_data = cov_data[:expected_size] if len(cov_data) > expected_size else np.pad(cov_data, (0, expected_size - len(cov_data)))
+              cov_snia = cov_data.reshape((n_snia, n_snia))
+              cov_snia = (cov_snia + cov_snia.T) / 2
+              print(f"Adjusted cov to shape {cov_snia.shape} (tolerance applied).")
+          else:
+              print(f"SNIa cov size mismatch ({len(cov_data)} vs {expected_size}). Using diagonal.")
+              cov_snia = np.diag(sigma**2)
+      else:
+          cov_snia = np.diag(sigma**2)
+          print("No separate SNIa cov found, using diagonal.")
+  
+  except Exception as e:
+      print(f"Pandas parse failed: {e}. Falling back to regex with limit.")
+      numbers = []
+      with open(data_path, 'r') as f:
+          lines = f.readlines()[:2000]  # Limit to first 2000 lines to avoid cov
+          for line in lines:
+              found = re.findall(r'[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?', line)
+              numbers.extend([float(num) for num in found])
+      numbers = np.array(numbers)
+      if len(numbers) % 3 != 0:
+          numbers = numbers[:-(len(numbers) % 3)]
+      n_snia = len(numbers) // 3
+      data = numbers.reshape((n_snia, 3))
+      z = data[:, 0]
+      mu = data[:, 1]
+      sigma = data[:, 2]
+      cov_snia = np.diag(sigma**2)
+      print(f"Fallback: Loaded {n_snia} SNIa points.")
+
+  if cov_path and cov_snia.shape[0] > 1000:
+      subsample = min(300, subsample or 300)
+      print(f"Full cov too large ({cov_snia.shape}), forcing subsample to {subsample} for memory.")
+
+  if subsample and subsample < n_snia:
+      indices = np.random.choice(n_snia, subsample, replace=False)
+      z, mu, sigma = z[indices], mu[indices], sigma[indices]
+      cov_snia = cov_snia[np.ix_(indices, indices)]
+      print(f"Subsampled to {subsample} SNIa points.")
+  
+  return z, mu, sigma, cov_snia, len(z)
+
+# Load data
+zip_files = ['actlite_3yr_v2p2.zip', 'Reference.zip']
+cl_path = find_and_unzip_files(zip_files, ['ACT+SPT_cl.dat'])
+cov_cmb_path = find_and_unzip_files(zip_files, ['ACT+SPT_cov.dat'])
+snia_data_path = find_and_unzip_files(zip_files, ['ES_AND_COVARPantheon%2BSH0ES.dat.txt', 'Pantheon'])
+snia_cov_path = find_and_unzip_files(zip_files, ['ES_AND_COVARPantheon%2BSH0ES_STAT%2BSYS.txt', 'cov'])
+
+ells_cmb, cl_obs, cov_cmb, n_cmb = load_cmb_data(cl_path, cov_cmb_path)
+z_snia, mu_obs, sigma_mu, cov_snia, n_snia = load_pantheon_data(snia_data_path, snia_cov_path, subsample=500)  # Default subsample for speed
+
+# Synthetic BAO data (unchanged)
+z_bao = np.array([0.38, 0.51, 0.61])
+Dv_bao = np.array([1477, 1877, 2140])
+sigma_bao = np.array([20, 20, 20])
+
+print(f"Loaded {n_snia} SNIa points and CMB with {n_cmb} points (cov shape {cov_cmb.shape}).")
+
+# CAMB grid generation (reduced res=4 for faster)
+def generate_camb_grid(res=4):
+  ombh2_vals = np.linspace(0.01, 0.03, res)
+  omch2_vals = np.linspace(0.1, 0.2, res)
+  grid = np.zeros((res, res, 3000))
+  for i in tqdm(range(res), desc="CAMB Grid Progress"):
+      for j in range(res):
+          pars = camb.CAMBparams()
+          pars.set_cosmology(H0=70, ombh2=ombh2_vals[i], omch2=omch2_vals[j])
+          results = camb.get_results(pars)
+          cl = results.get_cmb_power_spectra(pars, CMB_unit='muK')['total'][:, 0]
+          grid[i, j, :min(len(cl), 3000)] = cl[:min(len(cl), 3000)]
+  np.savez('camb_grid_v8_71.npz', ombh2=ombh2_vals, omch2=omch2_vals, cl=grid)
+  return ombh2_vals, omch2_vals, grid
+
+start_time = time.time()
+if os.path.exists('camb_grid_v8_71.npz'):
+  data = np.load('camb_grid_v8_71.npz')
+  ombh2_grid, omch2_grid, cl_grid = data['ombh2'], data['omch2'], data['cl']
+  print("Loaded existing CAMB grid.")
+else:
+  ombh2_grid, omch2_grid, cl_grid = generate_camb_grid(res=4)
+print(f"CAMB grid handled in {time.time() - start_time:.2f} s")
+
+# UQGPF model (unchanged)
+def E(z, Omega_m, h, gamma, beta, alpha, M_tcalib, scale_fparam):
+  return np.sqrt(Omega_m * (1 + z)**3 + (1 - Omega_m)) * h  # Placeholder
+
+def d_L(z, params):
+  try:
+      z_grid = np.linspace(0, max(z), 1000)
+      E_grid = E(z_grid, *params)
+      integral = cumulative_trapezoid(1 / E_grid, z_grid, initial=0)
+      return np.interp(z, z_grid, integral) * (1 + z)
+  except:
+      return np.array([ (1 + zi) * quad(lambda zp: 1 / E(zp, *params), 0, zi)[0] for zi in z ])
+
+def mu_theory(z, params):
+  return 5 * np.log10(d_L(z, params)) + 25 + params[5]
+
+# Likelihood functions (unchanged)
+def log_likelihood_snia(theta):
+  start = time.time()
+  mu_th = mu_theory(z_snia, theta)
+  residuals = mu_obs - mu_th
+  chi2 = np.dot(residuals, np.linalg.solve(cov_snia, residuals))
+  print(f"SNIa time: {time.time() - start:.2f} s | Chi2 SNIa: {chi2:.2f}")
+  return -0.5 * chi2
+
+def log_likelihood_bao(theta):
+  start = time.time()
+  Dv_th = d_L(z_bao, theta) * (1 + z_bao) / z_bao
+  residuals = Dv_bao - Dv_th
+  chi2 = np.sum((residuals / sigma_bao)**2)
+  print(f"BAO time: {time.time() - start:.2f} s | Chi2 BAO: {chi2:.2f}")
+  return -0.5 * chi2
+
+def log_likelihood_cmb(theta):
+  start = time.time()
+  Omega_m, h = theta[0], theta[1]
+  ombh2 = Omega_m * h**2 * 0.022 / 2.3
+  omch2 = Omega_m * h**2 * 0.12
+  i = np.argmin(np.abs(ombh2_grid - ombh2))
+  j = np.argmin(np.abs(omch2_grid - omch2))
+  cl_th = cl_grid[i, j, :n_cmb]
+  residuals = cl_obs - cl_th
+  chi2 = np.dot(residuals, np.linalg.solve(cov_cmb, residuals))
+  print(f"CMB time: {time.time() - start:.2f} s | Chi2 CMB: {chi2:.2f}")
+  return -0.5 * chi2
+
+def log_likelihood(theta):
+  start = time.time()
+  lnlike = log_likelihood_snia(theta) + log_likelihood_bao(theta) + log_likelihood_cmb(theta)
+  print(f"Total likelihood time: {time.time() - start:.2f} s")
+  return lnlike
+
+# Priors and probability (unchanged)
+def log_prior(theta):
+  Omega_m, h, gamma, beta, alpha, M_tcalib, scale_fparam = theta
+  if (0 < Omega_m < 1 and 0.1 < h < 1 and 0 < gamma < 10 and 0 < beta < 100 and 
+      0 < alpha < 1000 and -50 < M_tcalib < 50 and 0 < scale_fparam < 1e-6):
+      return 0.0
+  return -np.inf
+
+def log_probability(theta):
+  lp = log_prior(theta)
+  if not np.isfinite(lp):
+      return -np.inf
+  return lp + log_likelihood(theta)
+
+# MCMC setup (unchanged)
+nwalkers = 16
+ndim = 7
+initial = np.array([0.3, 0.7, 3.0, 50.0, 500.0, 0.0, 1e-8]) + 1e-4 * np.random.randn(nwalkers, ndim)
+sampler = emcee.EnsembleSampler(nwalkers, ndim, log_probability, pool=mp.Pool(mp.cpu_count()))
+
+# Run MCMC
+nsteps = 500
+chain = np.zeros((nsteps, nwalkers, ndim))
+lnprob = np.zeros((nsteps, nwalkers))
+pos = initial
+for i in tqdm(range(nsteps), desc="MCMC Progress"):
+  start_iter = time.time()
+  pos, lnlike, _ = sampler.run_mcmc(pos, 1)
+  chain[i] = pos
+  lnprob[i] = lnlike
+  print(f"Iteration {i+1} time: {time.time() - start_iter:.2f} s | Avg lnlike: {np.mean(lnlike):.2f}")
+  if i % 100 == 0 and i > 0:
+      with h5py.File('mcmc_backend_v8_71.h5', 'w') as f:
+          f.create_dataset('chain', data=chain[:i+1])
+
+# Post-processing (unchanged)
+flat_chain = chain[100:].reshape((-1, ndim))
+
+mu_th_med = mu_theory(z_snia, np.median(flat_chain, axis=0))
+residuals = mu_obs - mu_th_med
+np.savetxt('residuals_v8_71.csv', residuals, delimiter=',')
+
+fig = corner.corner(flat_chain, labels=["$\Omega_m$", "h", "$\gamma$", "$\\beta$", "$\\alpha$", "$M_{tcalib}$", "scale_{fparam}"])
+fig.savefig('uqgpf_posteriors_v8_71.pdf')
+
+samples = MCSamples(samples=flat_chain, names=['Omega_m', 'h', 'gamma', 'beta', 'alpha', 'M_tcalib', 'scale_fparam'], 
+                  labels=[r'\Omega_m', 'h', r'\gamma', r'\beta', r'\alpha', r'M_{tcalib}', r'scale_{fparam}'])
+g = plots.get_subplot_plotter()
+g.triangle_plot(samples, filled=True)
+g.export('uqgpf_fit_v8_71.pdf')
+
+best_fit = np.median(flat_chain, axis=0)
+with open('latex_table_v8_71.tex', 'w') as f:
+  f.write(r'\begin{table}\centering\begin{tabular}{cc}' + '\n')
+  for label, val in zip(["$\Omega_m$", "h", "$\gamma$", "$\\beta$", "$\\alpha$", "$M_{tcalib}$", "scale_{fparam}"], best_fit):
+      f.write(f'{label} & {val:.2f} \\\\' + '\n')
+  f.write(r'\end{tabular}\end{table}')
+
+with open('log_breakdown_v8_71.txt', 'w') as f:
+  f.write(f"Total time: {time.time() - start_time:.2f} s\n")
+
+print("Execution complete. Check output files.")

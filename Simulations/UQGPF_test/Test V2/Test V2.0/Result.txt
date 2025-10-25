@@ -1,0 +1,14 @@
+Saving actlite_3yr_v2p2.zip to actlite_3yr_v2p2.zip
+Saving Reference.zip to Reference.zip
+Uploaded files saved successfully.
+Extracted actlite_3yr_v2p2.zip to 'act_data'
+Extracted Reference.zip to 'ref_data'
+Loaded 89 CMB Cl points.
+Loaded covariance matrix with 7921 elements (reshaping to 89x89)
+Loaded 1701 valid SNIa points.
+  0%|          | 0/10000 [00:00<?, ?it/s]/usr/local/lib/python3.12/dist-packages/emcee/moves/red_blue.py:99: RuntimeWarning: invalid value encountered in scalar subtract
+  lnpdiff = f + nlp - state.log_prob[j]
+100%|██████████| 10000/10000 [6:01:19<00:00,  2.17s/it]
+Best-fit parameters: [2.00000000e-01 7.01274021e-01 2.50000000e-01 4.11262879e+12
+ 4.96968170e-04 5.04202963e-01]
+MCMC completed. Outputs generated: uqgpf_posteriors_v9.pdf, residuals_v9.csv, uqgpf_fit_v9.pdf, latex_table_v9.tex
