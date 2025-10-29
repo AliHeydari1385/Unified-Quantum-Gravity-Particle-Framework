@@ -1,0 +1,34 @@
+% Placeholder figure generation
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[
+    width=8cm, height=6cm,
+    xlabel={Redshift $z$},
+    ylabel={$H(z)$ [km/s/Mpc]},
+    legend pos=north west,
+    grid=major,
+    domain=0:3,
+    samples=100
+]
+
+% UQCMF model (blue)
+\addplot[blue, thick, domain=0:3] {73.1 * sqrt(0.245*(1+x)^3 + 0.755 + 3.2e-11*(1+x)^1.5)};
+\addlegendentry{\uqcmf}
+
+% LambdaCDM Planck (red dashed)
+\addplot[red, dashed, domain=0:3] {67.4 * sqrt(0.315*(1+x)^3 + 0.685)};
+\addlegendentry{$\Lambda$CDM Planck}
+
+% SH0ES-like (green dotted)
+\addplot[green, densely dotted, domain=0:3] {73.0 * sqrt(0.3*(1+x)^3 + 0.7)};
+\addlegendentry{SH0ES-like}
+
+\end{axis}
+\end{tikzpicture}
+
+\end{document}
