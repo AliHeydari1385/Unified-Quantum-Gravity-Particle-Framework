@@ -1,0 +1,136 @@
+!pip install emcee corner astropy scipy
+import numpy as np
+import matplotlib.pyplot as plt
+import emcee, corner
+from astropy.cosmology import FlatLambdaCDM
+from scipy.linalg import solve
+from tqdm import tqdm
+
+# -----------------------------
+# UQCMF MODEL DEFINITIONS
+# -----------------------------
+
+# Cosmological + Consciousness modified H(z)
+def H_uqcmf(z, theta):
+    H0, Om0, g_ae, rho_ratio = theta  # rho_ratio = ρ/ρ_LQC
+
+    # Effective axion-electron coupling
+    g_eff = g_ae * (1 + rho_ratio)
+    
+    # Consciousness feedback delta_Ψ(z)
+    delta_psi = 1e-10 * (1 + z)**1.5
+
+    Ol0 = 1.0 - Om0
+    H_LCDM = H0 * np.sqrt(Om0 * (1 + z)**3 + Ol0)
+    
+    # dark-matter + axion + consciousness modified term
+    H_mod = H_LCDM * (1 + g_eff * 1e-3 + delta_psi)
+    return H_mod
+
+
+# Luminosity distance and distance modulus μ(z)
+def mu_uqcmf(z, theta):
+    c = 3e5  # km/s
+    H0 = theta[0]
+    integrand = lambda z_i: 1.0 / H_uqcmf(z_i, theta)
+    zz = np.linspace(0, z, 200)
+    integral = np.trapezoid(list(map(integrand, zz)), zz)
+    DL = (1 + z) * c * integral
+    mu = 5 * np.log10(DL) + 25
+    return mu
+
+
+# -----------------------------
+# PRIORS
+# -----------------------------
+def log_prior(theta):
+    H0, Om0, g_ae, rho_ratio = theta
+    if not (60 < H0 < 80 and 0.1 < Om0 < 0.5 and 0.0 <= g_ae < 1e-2 and 0 <= rho_ratio < 10):
+        return -np.inf
+    
+    lnP_H0 = -0.5 * ((H0 - 73.9) / 2.0) ** 2
+    lnP_Om = -0.5 * ((Om0 - 0.24) / 0.05) ** 2
+    return lnP_H0 + lnP_Om
+
+
+# -----------------------------
+# LIKELIHOOD
+# -----------------------------
+def log_likelihood(theta, z, mu_obs, Cinv):
+    try:
+        mu_model = np.array([mu_uqcmf(zi, theta) for zi in z])
+        diff = mu_obs - mu_model
+        chi2 = np.dot(diff, np.dot(Cinv, diff))
+        if np.isnan(chi2) or not np.isfinite(chi2):
+            return -np.inf
+        return -0.5 * chi2
+    except Exception:
+        return -np.inf
+
+
+# -----------------------------
+# POSTERIOR COMBINATION
+# -----------------------------
+def log_probability(theta, z, mu_obs, Cinv):
+    lp = log_prior(theta)
+    if not np.isfinite(lp):
+        return -np.inf
+    ll = log_likelihood(theta, z, mu_obs, Cinv)
+    return lp + ll if np.isfinite(ll) else -np.inf
+
+
+# -----------------------------
+# LOAD/GENERATE DATA (FAKE SNIa EXAMPLE)
+# -----------------------------
+np.random.seed(42)
+z_data = np.linspace(0.01, 1.5, 50)
+theta_true = [73.9, 0.24, 1e-3, 0.5]
+mu_true = np.array([mu_uqcmf(z, theta_true) for z in z_data])
+sigma = np.full_like(z_data, 0.15)
+cov = np.diag(sigma**2)
+Cinv = np.linalg.inv(cov)
+mu_obs = mu_true + np.random.normal(0, sigma)
+
+# -----------------------------
+# MCMC SAMPLER
+# -----------------------------
+ndim, nwalkers, nsteps = 4, 32, 10000
+pos0 = [np.array([73.0, 0.25, 1e-3, 0.5]) + 1e-5 * np.random.randn(ndim)
+        for _ in range(nwalkers)]
+
+sampler = emcee.EnsembleSampler(nwalkers, ndim, log_probability, args=(z_data, mu_obs, Cinv))
+
+print("Running UQCMF MCMC v1.12.6...")
+for sample in tqdm(sampler.sample(pos0, iterations=nsteps, progress=False), total=nsteps):
+    pass
+
+# -----------------------------
+# RESULTS & PLOTS
+# -----------------------------
+samples = sampler.get_chain(discard=2000, thin=2, flat=True)
+labels = [r"$H_0$", r"$\Omega_m$", r"$g_{ae}$", r"$\rho/\rho_{LQC}$"]
+
+fig = corner.corner(samples, labels=labels, truths=theta_true, color='darkblue')
+plt.savefig("uqcmf_posterior_v1_12_6.png", dpi=200)
+
+best = np.median(samples, axis=0)
+H0_mcmc, Om0_mcmc, g_ae_mcmc, rho_ratio_mcmc = best
+
+plt.figure(figsize=(7,5))
+plt.errorbar(z_data, mu_obs, yerr=sigma, fmt=".k", alpha=0.4)
+z_fit = np.linspace(0, 1.5, 200)
+mu_fit = [mu_uqcmf(z, best) for z in z_fit]
+plt.plot(z_fit, mu_fit, "r-", lw=2, label=f"H0={H0_mcmc:.2f}, Ωm={Om0_mcmc:.2f}")
+plt.xlabel("z")
+plt.ylabel("μ(z)")
+plt.legend()
+plt.grid(True)
+plt.savefig("uqcmf_hubblefit_v1_12_6.png", dpi=200)
+plt.close()
+
+print("\n----- UQCMF v1.12.6 RESULTS -----")
+print(f"H0 = {H0_mcmc:.2f} ± {np.std(samples[:,0]):.2f}")
+print(f"Ωm = {Om0_mcmc:.3f} ± {np.std(samples[:,1]):.3f}")
+print(f"g_ae = {g_ae_mcmc:.4e}")
+print(f"ρ/ρ_LQC = {rho_ratio_mcmc:.3f}")
+print("----------------------------------")
