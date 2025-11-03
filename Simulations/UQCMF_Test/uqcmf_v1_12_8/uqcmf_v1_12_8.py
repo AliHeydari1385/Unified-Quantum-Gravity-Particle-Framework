@@ -6,7 +6,7 @@ Author: Ali Heidari Nezhad et al.
 Date: November 2025
 Purpose: Resolve H0 tension via quantum field inhomogeneity modeling
 """
-
+pip install numpy pandas matplotlib seaborn scipy emcee corner astropy
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
